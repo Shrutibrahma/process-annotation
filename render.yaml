@@ -1,0 +1,49 @@
+# Render Blueprint: Dashboard > New > Blueprint > pick this repository.
+# Fill GEMINI_API_KEY and WORKSTUDY_SIGNUP_CODE when Render asks (they are never stored in the repo).
+services:
+  - type: web
+    name: process-annotation
+    runtime: docker
+    plan: starter            # a persistent disk needs a paid instance
+    healthCheckPath: /api/config
+    disk:
+      name: process-annotation-data
+      mountPath: /data
+      sizeGB: 20             # videos are the bulk: ~200 MB per 10-minute study
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false          # paste your key in the Render dashboard
+      - key: WORKSTUDY_SIGNUP_CODE
+        sync: false          # access code people need to start a new team; share it with the link
+      - key: WORKSTUDY_SECRET
+        generateValue: true  # signs login sessions
+      - key: WORKSTUDY_AUTH
+        value: "1"
+      - key: WORKSTUDY_MONTHLY_ANALYSES
+        value: "30"          # paid video analyses per team per month
+      - key: WORKSTUDY_ENGINE
+        value: gemini
+      - key: WORKSTUDY_GEMINI_MODEL
+        value: gemini-3.8-flash
+      - key: WORKSTUDY_TIMING_MODEL
+        value: gemini-4-argon      # strongest model for timing and the precision pass
+      - key: WORKSTUDY_REFINE_RESOLUTION
+        value: high
+      - key: WORKSTUDY_COPILOT_MODEL
+        value: gemini-4-argon
+      - key: WORKSTUDY_MEDIA_PROCESSING
+        value: static
+      - key: WORKSTUDY_FPS
+        value: "5"
+      - key: WORKSTUDY_MAX_VIDEO_TOKENS
+        value: "600000"
+      - key: WORKSTUDY_SHEET_DECIMALS
+        value: "1"
+      - key: WORKSTUDY_MAX_UPLOAD_MB
+        value: "2048"
+      - key: WORKSTUDY_TRANSCRIPT_FPS
+        value: "10"
+      - key: WORKSTUDY_TRANSCRIPT_WORKERS
+        value: "4"
+      - key: WORKSTUDY_ALIGN
+        value: "0"           # frame alignment is CPU-heavy; turn on with a bigger instance

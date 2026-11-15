@@ -1,0 +1,987 @@
+{
+  "id": "cc9a466905b444728a1cb8ca04602eb5",
+  "number": 3,
+  "created_at": 1794734314.7763052,
+  "status": "ready",
+  "progress": "",
+  "error": null,
+  "header": {
+    "project": "",
+    "product": "",
+    "job": "Build an LED circuit on a breadboard",
+    "line": "Electronics bench",
+    "takt": "",
+    "operator": "",
+    "prepared_by": "",
+    "date": "2026-11-15"
+  },
+  "source_name": "breadboard.mp4",
+  "duration": 441.63,
+  "engine": "gemini",
+  "cycles": [
+    {
+      "index": 1,
+      "start": 137.0,
+      "end": 430.5,
+      "abnormal": false,
+      "x_suggested": false,
+      "note": "",
+      "x_reason": "",
+      "x_time": null,
+      "events": [
+        {
+          "time": 146.4,
+          "element_id": "E3",
+          "text": "verbal explanation of power bus strip layout"
+        },
+        {
+          "time": 221.8,
+          "element_id": "E5",
+          "text": "detailed explanation of LED polarity and internal structure"
+        },
+        {
+          "time": 275.6,
+          "element_id": "E8",
+          "text": "struggles slightly aligning resistor lead into breadboard tie point"
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "id": "s1",
+      "element_id": "E1",
+      "cycle": 1,
+      "start": 137.0,
+      "end": 141.6,
+      "title": "Connect ground wire to rail",
+      "breakpoint": "black wire enters frame",
+      "description": "Insert black jumper wire from Arduino ground pin into the blue negative power bus rail on the breadboard.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "black jumper wire",
+        "breadboard",
+        "Arduino Uno"
+      ],
+      "key_points": [
+        "Ensure wire is seated firmly in the negative rail pinhole"
+      ],
+      "transcript": [
+        {
+          "t": 137.0,
+          "text": "Right hand positions the pin of the black wire over the top blue rail near column 60"
+        },
+        {
+          "t": 138.5,
+          "text": "Right hand presses the black wire pin into the top blue rail hole at column 60"
+        },
+        {
+          "t": 140.5,
+          "text": "Right hand releases the black wire"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s2",
+      "element_id": "E2",
+      "cycle": 1,
+      "start": 141.6,
+      "end": 146.4,
+      "title": "Connect 5V power wire to rail",
+      "breakpoint": "red wire grasped",
+      "description": "Insert red jumper wire from Arduino 5V pin into the red positive power bus rail on the breadboard.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "red jumper wire",
+        "breadboard",
+        "Arduino Uno"
+      ],
+      "key_points": [
+        "Verify 5V connects to red positive rail, not adjacent ground"
+      ],
+      "transcript": [
+        {
+          "t": 143.1,
+          "text": "Right hand brings a red jumper wire towards the breadboard"
+        },
+        {
+          "t": 143.7,
+          "text": "Right hand inserts the red jumper wire pin into the positive (red) power rail next to the black wire"
+        },
+        {
+          "t": 145.8,
+          "text": "Right hand releases the red jumper wire"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s3",
+      "element_id": "E3",
+      "cycle": 1,
+      "start": 146.4,
+      "end": 180.2,
+      "title": "Inspect power rails layout",
+      "breakpoint": "hand points to rail",
+      "description": "Trace and verify power and ground continuity along the breadboard outer rails.",
+      "category": "necessary_nva",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "breadboard"
+      ],
+      "key_points": [],
+      "transcript": [
+        {
+          "t": 146.4,
+          "text": "Left hand touches the top power rail near column 50"
+        },
+        {
+          "t": 150.5,
+          "text": "Right hand index finger points to column 30 and traces across the upper rows toward column 60"
+        },
+        {
+          "t": 157.0,
+          "text": "Left hand touches the top power rail near column 45"
+        },
+        {
+          "t": 160.6,
+          "text": "Right hand index finger traces the top power rail from the center gap to the right end"
+        },
+        {
+          "t": 164.7,
+          "text": "Left hand index finger points to the center break in the top power rail"
+        },
+        {
+          "t": 166.7,
+          "text": "Left hand index finger sweeps left along the top power rail"
+        },
+        {
+          "t": 167.3,
+          "text": "Left hand index finger traces back and forth across the center gap of the top power rail"
+        },
+        {
+          "t": 170.4,
+          "text": "Left hand index finger points to the polarity markings at the top left of the breadboard"
+        },
+        {
+          "t": 174.8,
+          "text": "Left hand index finger points to the polarity markings at the bottom left of the breadboard"
+        },
+        {
+          "t": 175.5,
+          "text": "Right hand finger points to the bottom right end of the power rail"
+        },
+        {
+          "t": 177.2,
+          "text": "Both hands grip the left and right sides of the breadboard"
+        },
+        {
+          "t": 179.0,
+          "text": "Both hands release the breadboard"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s4",
+      "element_id": "E4",
+      "cycle": 1,
+      "start": 180.2,
+      "end": 221.8,
+      "title": "Separate jumper wires",
+      "breakpoint": "ribbon cable picked",
+      "description": "Pick ribbon cable from wire supply and peel individual male-to-male jumper wires off the ribbon.",
+      "category": "necessary_nva",
+      "hand": "both",
+      "tools": [],
+      "materials": [
+        "jumper wire ribbon"
+      ],
+      "key_points": [
+        "Pull wires apart smoothly without tearing pin crimp housings"
+      ],
+      "transcript": [
+        {
+          "t": 180.2,
+          "text": "Both hands hold a multi-colored ribbon cable of jumper wires."
+        },
+        {
+          "t": 184.6,
+          "text": "Both hands separate the connector ends of several wires from the ribbon."
+        },
+        {
+          "t": 189.9,
+          "text": "Both hands turn the ribbon cable over."
+        },
+        {
+          "t": 192.9,
+          "text": "Left index finger points along the wires of the ribbon cable."
+        },
+        {
+          "t": 199.1,
+          "text": "Right index finger points to the breadboard."
+        },
+        {
+          "t": 202.5,
+          "text": "Both hands peel a strip of five jumper wires off the ribbon cable."
+        },
+        {
+          "t": 207.8,
+          "text": "Both hands place the ribbon cable aside and set the separated jumper wires above the breadboard."
+        },
+        {
+          "t": 209.5,
+          "text": "Right hand slides the Arduino Uno board closer to the breadboard."
+        },
+        {
+          "t": 210.6,
+          "text": "Right index finger touches the Arduino Uno board."
+        },
+        {
+          "t": 214.0,
+          "text": "Right index finger traces along the top power rail of the breadboard."
+        },
+        {
+          "t": 220.3,
+          "text": "Left hand and right hand point to the upper and lower sections of the breadboard."
+        }
+      ],
+      "location_id": "L2",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s5",
+      "element_id": "E5",
+      "cycle": 1,
+      "start": 221.8,
+      "end": 245.4,
+      "title": "Inspect red LED polarity",
+      "breakpoint": "LED picked up",
+      "description": "Pick red 5mm LED and inspect lead lengths to identify longer anode lead and shorter cathode lead.",
+      "category": "necessary_nva",
+      "hand": "both",
+      "tools": [],
+      "materials": [
+        "red 5mm LED"
+      ],
+      "key_points": [
+        "Longer leg is positive anode; flat notch on casing indicates cathode"
+      ],
+      "transcript": [
+        {
+          "t": 222.6,
+          "text": "Left hand picks up an LED from the table to the left"
+        },
+        {
+          "t": 223.3,
+          "text": "Both hands hold the LED upright close to the camera to inspect internal electrodes"
+        },
+        {
+          "t": 226.2,
+          "text": "Right index finger points at the LED casing"
+        },
+        {
+          "t": 235.5,
+          "text": "Both hands rotate the LED horizontally to inspect lead lengths"
+        },
+        {
+          "t": 240.3,
+          "text": "Left hand holds the LED upright above the breadboard"
+        },
+        {
+          "t": 242.8,
+          "text": "Right index finger points along the LED leads to show polarity"
+        }
+      ],
+      "location_id": "L3",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s6",
+      "element_id": "E6",
+      "cycle": 1,
+      "start": 245.4,
+      "end": 268.2,
+      "title": "Insert red LED into breadboard",
+      "breakpoint": "LED moves to board",
+      "description": "Position and press red LED leads into terminal rows across separate column strips on the breadboard.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "red 5mm LED",
+        "breadboard"
+      ],
+      "key_points": [
+        "Insert leads into distinct rows to prevent short circuiting"
+      ],
+      "transcript": [
+        {
+          "t": 245.4,
+          "text": "Left hand positions the LED above columns 24 and 25 of the upper breadboard area"
+        },
+        {
+          "t": 246.8,
+          "text": "Left hand inserts the LED pins into the breadboard holes at rows 24 and 25"
+        },
+        {
+          "t": 249.1,
+          "text": "Right index finger points towards the LED pins along row 25"
+        },
+        {
+          "t": 253.6,
+          "text": "Left hand releases the LED"
+        },
+        {
+          "t": 255.2,
+          "text": "Left and right index fingers point to the corresponding columns on the lower half of the breadboard"
+        },
+        {
+          "t": 261.0,
+          "text": "Right index finger points directly to the inserted LED"
+        },
+        {
+          "t": 263.8,
+          "text": "Left hand presses the LED firmly into the breadboard holes"
+        },
+        {
+          "t": 265.4,
+          "text": "Both hands withdraw from the breadboard"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s7",
+      "element_id": "E7",
+      "cycle": 1,
+      "start": 268.2,
+      "end": 275.6,
+      "title": "Form resistor leads",
+      "breakpoint": "resistor picked up",
+      "description": "Pick through-hole 330 ohm resistor and bend axial wire leads 90 degrees downward.",
+      "category": "necessary_nva",
+      "hand": "both",
+      "tools": [],
+      "materials": [
+        "330 ohm resistor"
+      ],
+      "key_points": [
+        "Bend leads to match breadboard hole pitch spacing"
+      ],
+      "transcript": [
+        {
+          "t": 269.0,
+          "text": "Right hand bends one lead of the resistor downward at a 90-degree angle"
+        },
+        {
+          "t": 271.2,
+          "text": "Both hands rotate the resistor"
+        },
+        {
+          "t": 271.5,
+          "text": "Right hand bends the other lead downward at a 90-degree angle to create a U-shape"
+        },
+        {
+          "t": 272.4,
+          "text": "Right hand takes the resistor from the left hand"
+        },
+        {
+          "t": 272.6,
+          "text": "Right hand holds the resistor leads over the breadboard holes to check spacing"
+        },
+        {
+          "t": 273.3,
+          "text": "Right hand places the resistor on the table"
+        },
+        {
+          "t": 273.8,
+          "text": "Left hand picks up the resistor from the table"
+        },
+        {
+          "t": 274.5,
+          "text": "Right hand takes the resistor and positions it above the breadboard"
+        }
+      ],
+      "location_id": "L4",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s8",
+      "element_id": "E8",
+      "cycle": 1,
+      "start": 275.6,
+      "end": 302.0,
+      "title": "Insert resistor for red LED",
+      "breakpoint": "resistor approaches board",
+      "description": "Insert one resistor lead into the negative ground rail and the second lead into the LED cathode terminal row.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "330 ohm resistor",
+        "breadboard"
+      ],
+      "key_points": [
+        "Ensure solid seating in tie points without bending leads"
+      ],
+      "transcript": [
+        {
+          "t": 275.6,
+          "text": "Right hand presses the LED into the breadboard while left hand holds the breadboard"
+        },
+        {
+          "t": 281.4,
+          "text": "Right hand releases the LED"
+        },
+        {
+          "t": 281.8,
+          "text": "Right hand picks up the resistor from the breadboard"
+        },
+        {
+          "t": 285.3,
+          "text": "Right hand inserts one leg of the resistor into the top negative rail and the other leg into column 26"
+        },
+        {
+          "t": 288.4,
+          "text": "Right hand pushes the resistor down and releases it"
+        },
+        {
+          "t": 293.3,
+          "text": "Right index finger points along the top negative rail to the resistor and the LED"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s9",
+      "element_id": "E9",
+      "cycle": 1,
+      "start": 302.0,
+      "end": 314.8,
+      "title": "Pick red jumper wire",
+      "breakpoint": "hand reaches to wire",
+      "description": "Reach and grasp red male-to-male jumper wire from the bench.",
+      "category": "necessary_nva",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "red jumper wire"
+      ],
+      "key_points": [],
+      "transcript": [
+        {
+          "t": 302.3,
+          "text": "Left hand inserts the pin of the red jumper wire into hole 21E of the breadboard"
+        },
+        {
+          "t": 307.0,
+          "text": "Left hand presses the LED bulb down firmly into the breadboard"
+        },
+        {
+          "t": 309.6,
+          "text": "Left hand releases the LED"
+        },
+        {
+          "t": 310.1,
+          "text": "Left hand reaches for the free end of the red jumper wire"
+        },
+        {
+          "t": 310.7,
+          "text": "Left hand grasps and lifts the free end of the red jumper wire"
+        },
+        {
+          "t": 312.3,
+          "text": "Right hand grasps the pin connector of the red jumper wire"
+        },
+        {
+          "t": 313.3,
+          "text": "Right hand releases the red jumper wire"
+        }
+      ],
+      "location_id": "L2",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s10",
+      "element_id": "E10",
+      "cycle": 1,
+      "start": 314.8,
+      "end": 344.6,
+      "title": "Connect power to red LED",
+      "breakpoint": "wire reaches board",
+      "description": "Plug one end of red jumper wire into the positive power rail and the other end into the LED anode row, illuminating the red LED.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "red jumper wire",
+        "breadboard"
+      ],
+      "key_points": [
+        "Verify LED lights up immediately upon connection"
+      ],
+      "transcript": [],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s11",
+      "element_id": "E11",
+      "cycle": 1,
+      "start": 344.6,
+      "end": 355.8,
+      "title": "Pick and inspect yellow LED",
+      "breakpoint": "hand reaches to LEDs",
+      "description": "Pick 5mm yellow LED from bin and verify polarity of the leads.",
+      "category": "necessary_nva",
+      "hand": "both",
+      "tools": [],
+      "materials": [
+        "yellow 5mm LED"
+      ],
+      "key_points": [
+        "Identify longer anode leg"
+      ],
+      "transcript": [
+        {
+          "t": 344.6,
+          "text": "Left hand positions a clear LED onto the breadboard"
+        },
+        {
+          "t": 346.5,
+          "text": "Left hand releases the clear LED"
+        },
+        {
+          "t": 347.3,
+          "text": "Right hand brings a clear LED into view"
+        },
+        {
+          "t": 347.8,
+          "text": "Left hand picks up the clear LED from the breadboard"
+        },
+        {
+          "t": 348.4,
+          "text": "Both hands hold up and inspect the two LEDs side by side"
+        },
+        {
+          "t": 353.8,
+          "text": "Left hand lowers and sets its LED down on the table"
+        },
+        {
+          "t": 355.0,
+          "text": "Left hand points with its index finger at the lit red LED on the breadboard"
+        }
+      ],
+      "location_id": "L3",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s12",
+      "element_id": "E12",
+      "cycle": 1,
+      "start": 355.8,
+      "end": 363.6,
+      "title": "Insert yellow LED into breadboard",
+      "breakpoint": "LED touches board",
+      "description": "Insert yellow LED leads into adjacent available rows on the breadboard.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "yellow 5mm LED",
+        "breadboard"
+      ],
+      "key_points": [
+        "Seat firmly into breadboard contacts"
+      ],
+      "transcript": [
+        {
+          "t": 356.2,
+          "text": "Left hand holds the bottom edge of the breadboard to steady it"
+        },
+        {
+          "t": 356.5,
+          "text": "Right hand inserts the leads of the yellow LED into the upper section of the breadboard"
+        },
+        {
+          "t": 357.2,
+          "text": "Right hand releases the LED and pulls away"
+        },
+        {
+          "t": 357.3,
+          "text": "Left hand releases the breadboard and pulls away"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s13",
+      "element_id": "E13",
+      "cycle": 1,
+      "start": 363.6,
+      "end": 371.4,
+      "title": "Pick jumper wire for yellow LED",
+      "breakpoint": "hand reaches to wires",
+      "description": "Reach and grab jumper wire from wire stock.",
+      "category": "necessary_nva",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "jumper wire"
+      ],
+      "key_points": [],
+      "transcript": [
+        {
+          "t": 364.8,
+          "text": "Right hand grasps one pin of the red jumper wire"
+        },
+        {
+          "t": 365.3,
+          "text": "Right hand positions the pin over row 29 on the top half of the breadboard"
+        },
+        {
+          "t": 365.8,
+          "text": "Right hand inserts the pin into row 29 of the breadboard"
+        },
+        {
+          "t": 367.1,
+          "text": "Right hand releases the pin"
+        },
+        {
+          "t": 368.3,
+          "text": "Right hand presses the inserted pin into place with index finger"
+        },
+        {
+          "t": 370.4,
+          "text": "Right hand grasps the other end of the red jumper wire"
+        }
+      ],
+      "location_id": "L2",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s14",
+      "element_id": "E14",
+      "cycle": 1,
+      "start": 371.4,
+      "end": 382.0,
+      "title": "Connect power jumper for yellow LED",
+      "breakpoint": "wire reaches yellow LED row",
+      "description": "Insert jumper wire connecting positive power rail to yellow LED anode column.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "jumper wire",
+        "breadboard"
+      ],
+      "key_points": [
+        "Align pin into correct column matching yellow LED anode"
+      ],
+      "transcript": [
+        {
+          "t": 372.0,
+          "text": "Right hand moves the red jumper wire pin toward row 24 of the breadboard"
+        },
+        {
+          "t": 373.6,
+          "text": "Right hand inserts the pin into row 24 of the breadboard, in line with the anode of the clear LED"
+        },
+        {
+          "t": 375.2,
+          "text": "Right hand releases the jumper wire pin"
+        },
+        {
+          "t": 379.6,
+          "text": "Right hand reaches for the clear LED at row 24"
+        },
+        {
+          "t": 380.2,
+          "text": "Right hand presses down on the clear LED to seat it in the breadboard"
+        },
+        {
+          "t": 381.8,
+          "text": "Right hand releases the clear LED"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s15",
+      "element_id": "E15",
+      "cycle": 1,
+      "start": 382.0,
+      "end": 404.2,
+      "title": "Insert resistor for yellow LED",
+      "breakpoint": "resistor approaches board",
+      "description": "Insert current-limiting resistor between ground rail and yellow LED cathode row, illuminating the yellow LED.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "330 ohm resistor",
+        "breadboard"
+      ],
+      "key_points": [
+        "Verify yellow LED illuminates when ground completes circuit"
+      ],
+      "transcript": [
+        {
+          "t": 382.5,
+          "text": "Right hand grasps the yellow LED on the breadboard"
+        },
+        {
+          "t": 383.2,
+          "text": "Right hand presses the yellow LED firmly into the breadboard until it lights up"
+        },
+        {
+          "t": 386.9,
+          "text": "Right hand releases the yellow LED"
+        },
+        {
+          "t": 391.4,
+          "text": "Right hand points at the yellow LED"
+        },
+        {
+          "t": 394.6,
+          "text": "Right hand reaches for a red jumper wire on the right"
+        },
+        {
+          "t": 395.0,
+          "text": "Right hand grasps the red jumper wire"
+        },
+        {
+          "t": 399.5,
+          "text": "Right hand moves the red jumper wire to the breadboard"
+        },
+        {
+          "t": 400.2,
+          "text": "Right hand inserts the pin of the red jumper wire into column 31 of the breadboard"
+        },
+        {
+          "t": 402.4,
+          "text": "Right hand releases the red jumper wire"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s16",
+      "element_id": "E16",
+      "cycle": 1,
+      "start": 404.2,
+      "end": 408.6,
+      "title": "Insert resistor for green LED",
+      "breakpoint": "resistor moves to rail",
+      "description": "Insert 330 ohm resistor connecting negative rail to green LED column.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "330 ohm resistor",
+        "breadboard"
+      ],
+      "key_points": [
+        "Ensure resistor lead connects to common ground rail"
+      ],
+      "transcript": [
+        {
+          "t": 404.2,
+          "text": "Both hands bend the leads of a resistor."
+        },
+        {
+          "t": 404.6,
+          "text": "Both hands release the resistor onto the breadboard."
+        },
+        {
+          "t": 405.2,
+          "text": "Right hand picks up the resistor from the breadboard."
+        },
+        {
+          "t": 405.7,
+          "text": "Left index finger rests on the breadboard near column 12."
+        },
+        {
+          "t": 405.9,
+          "text": "Right hand inserts one lead of the resistor into row 13 and the other into the top negative rail."
+        },
+        {
+          "t": 408.0,
+          "text": "Right hand presses the resistor down into the breadboard."
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s17",
+      "element_id": "E17",
+      "cycle": 1,
+      "start": 408.6,
+      "end": 411.4,
+      "title": "Insert green LED into breadboard",
+      "breakpoint": "green LED touches board",
+      "description": "Insert green LED leads into powered row and resistor row, completing the circuit to illuminate green LED.",
+      "category": "value_add",
+      "hand": "R",
+      "tools": [],
+      "materials": [
+        "green 5mm LED",
+        "breadboard"
+      ],
+      "key_points": [
+        "Confirm correct polarity so green LED lights up"
+      ],
+      "transcript": [
+        {
+          "t": 408.6,
+          "text": "Right hand positions the green LED over the breadboard"
+        },
+        {
+          "t": 409.7,
+          "text": "Both hands insert the green LED into the breadboard holes"
+        },
+        {
+          "t": 411.1,
+          "text": "Both hands release the green LED and breadboard"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    },
+    {
+      "id": "s18",
+      "element_id": "E18",
+      "cycle": 1,
+      "start": 411.4,
+      "end": 430.5,
+      "title": "Inspect complete LED circuit",
+      "breakpoint": "hands gesture over board",
+      "description": "Inspect and verify all three LEDs (red, yellow, green) are continuously lit.",
+      "category": "necessary_nva",
+      "hand": "both",
+      "tools": [],
+      "materials": [
+        "breadboard"
+      ],
+      "key_points": [
+        "Verify all connections are secure and stable"
+      ],
+      "transcript": [
+        {
+          "t": 411.4,
+          "text": "Inspect the red, yellow, and green LEDs illuminated on the breadboard"
+        }
+      ],
+      "location_id": "L1",
+      "walk": false,
+      "confidence": "high",
+      "edited": false
+    }
+  ],
+  "representative_cycle": 1,
+  "warnings": [],
+  "notes": "Handheld camera movements and variable lighting throughout. The video opens with a conceptual demonstration and explanation of breadboard internal bus and column connections (00:09 - 02:16) prior to the physical circuit assembly beginning at 02:17.\nLayout: Components are arranged loosely on the workbench surface around the central breadboard.",
+  "updated_at": 1794734617.0052392,
+  "station_key": "electronics-bench",
+  "template_used": true,
+  "analysis_mode": "draft",
+  "layout_source": "draft",
+  "calibration": null,
+  "layout": [
+    {
+      "id": "L1",
+      "label": "Breadboard",
+      "type": "fixture",
+      "column": "center",
+      "row": "front",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L2",
+      "label": "Jumper wires",
+      "type": "bin",
+      "column": "center",
+      "row": "back",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L3",
+      "label": "LEDs",
+      "type": "bin",
+      "column": "left",
+      "row": "middle",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L4",
+      "label": "Resistors",
+      "type": "bin",
+      "column": "left",
+      "row": "back",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L5",
+      "label": "Arduino board",
+      "type": "equipment",
+      "column": "right",
+      "row": "middle",
+      "shelf": null,
+      "order": 1
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+feature,area,priority,original,clone,notes
+Upload a phone video of a station,capture,must,yes,yes,
+Auto-split video into steps with written descriptions,work instructions,must,yes,yes,Gemini engine
+Time per step,work instructions,must,yes,yes,
+Value-add / non value-add per step,work instructions,must,yes,yes,
+Step list with synced player (loop step / prev / next / speed),work instructions,must,yes,yes,
+Materials / tools / key points per step,work instructions,must,yes,yes,model-extracted; empty states shown
+Cycle time,work instructions,must,yes,yes,
+Edit step text and boundaries,work instructions,must,yes,yes,hidden behind Edit
+Export work instructions with per-step video,work instructions,must,yes,yes,zip: HTML + image + clip per step
+Face anonymization in video,privacy,must,yes,no,their screenshots show the operator's face pixelated
+Time study across multiple cycles,time study,should,yes,yes,
+Standard work documents,time study,should,yes,partial,XLSX sheets done; standardized work chart drawing not generated
+Line balancing / yamazumi across stations,line,should,yes,yes,bottleneck + efficiency + operators at takt; no precedence diagram
+Ergonomic scoring (REBA / RULA / OWAS / NIOSH / SNOOK),ergonomics,should,yes,partial,Copilot screening from step data; no pose-based score
+Predetermined time systems (MTM-UAS / MODAPTS),time study,should,yes,partial,Copilot MODAPTS estimate from transcripts
+On-premise deployment,deployment,should,yes,partial,app runs locally; video analysis goes to Gemini cloud
+P-FMEA generation,quality,could,yes,partial,Copilot drafts a P-FMEA table; no failure-mode library
+Floor analysis across stations,line,could,yes,no,
+Natural-language Q&A over studies,copilot,could,yes,partial,per study (Copilot tab); not across studies
+Tablet use on Gemba walks,capture,could,yes,partial,web app opens on a tablet; not optimized
+Observation Preparation Sheet,standard forms,should,no,yes,added: not in original
+Manual Time Observation Sheet,standard forms,should,no,yes,added: not in original
+Proprietary LeanGPT models and Pathfinder platform,platform,could,yes,skip,their trained models and platform are not a feature you rebuild
+Kaizen ideas and action plan,copilot,should,yes,yes,waste type + est. saving + owner/due/status

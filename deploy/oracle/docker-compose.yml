@@ -1,0 +1,33 @@
+# Process Annotation on one server: the app plus Caddy for HTTPS (free certificate, automatic renewal).
+# Started by deploy.ps1:  docker compose --env-file /opt/process-annotation/app/.env up -d --build
+services:
+  app:
+    build: ../..
+    restart: unless-stopped
+    env_file: ../../.env
+    environment:
+      WORKSTUDY_DATA: /data
+      WORKSTUDY_AUTH: "1"
+    volumes:
+      - /opt/process-annotation/data:/data
+    expose:
+      - "8000"
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - app
+
+volumes:
+  caddy_data: {}
+  caddy_config: {}

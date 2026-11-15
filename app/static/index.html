@@ -1,0 +1,2515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Process Annotation · Learn any task, step by step</title>
+<link rel="icon" type="image/svg+xml" href="/brand/mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ecece7; --surface:#fff; --surface-2:#f6f6f2; --line:#d6d6cd; --line-2:#e7e7e0;
+  --ink:#1d1f1a; --ink-2:#3c3f37; --muted:#6b6a60;
+  --primary:#487037; --primary-hover:#3a5c2c; --soft:#e2eadb; --on-soft:#22361a;
+  --accent:#9db384; --warm:#847f72; --side:#262823; --side-ink:#dcdcd2; --side-muted:#9c998c; --side-hover:rgba(255,255,255,.06); --side-sel:#3a4433;
+  --va:#1baf7a; --nnva:#2a78d6; --waste:#eb6834; --err:#b3261e;
+  --r:10px; --r-sm:8px;
+  --font:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --spark:linear-gradient(90deg,#0d6b5c 0%,#0d6b5c 100%);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font:14px/1.5 var(--font);color:var(--ink);background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+a{color:var(--primary)}
+.muted{color:var(--muted)} .err{color:var(--err)}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* shell */
+.shell{display:grid;grid-template-columns:272px minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:14px 12px;display:flex;flex-direction:column;gap:6px;overflow:auto;background:var(--side) url(/brand/camo-dark.svg) repeat;color:var(--side-ink);border-right:3px solid var(--primary)}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 10px 16px;text-decoration:none;color:#fff;border-bottom:1px solid rgba(255,255,255,.08);margin-bottom:10px}
+.brand .mark{width:44px;height:44px;flex:none;border-radius:12px;display:grid;place-items:center;background:linear-gradient(180deg,#f4f4ef,#dcddd3);box-shadow:0 1px 0 #fff inset,0 6px 14px -6px rgba(0,0,0,.6)}
+.brand .mark img{width:26px;height:auto}
+.brand b{display:block;font-size:1.15rem;font-weight:800;letter-spacing:.06em;line-height:1.05;color:#fff}
+.brand .ls{display:block;font-size:.62rem;font-weight:700;letter-spacing:.2em;color:var(--warm);margin-top:2px}
+.brand small{display:block;color:var(--accent);font-size:.7rem;margin-top:5px;letter-spacing:.01em}
+.spark{width:26px;height:26px;flex:none}
+.new-btn{display:flex;align-items:center;gap:10px;border:0;background:var(--primary);color:#fff;padding:10px 16px;border-radius:6px;cursor:pointer;font-weight:600;text-decoration:none;width:max-content;margin:0 0 10px 4px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
+.new-btn:hover{background:var(--primary-hover)}
+.nav a{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:8px;color:var(--side-ink);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--side-hover)}
+.nav a[aria-current=page]{background:var(--side-sel);color:#fff;box-shadow:inset 3px 0 0 var(--accent)}
+.nav svg{width:20px;height:20px}
+.side h3{font-size:.7rem;font-weight:600;color:var(--side-muted);margin:16px 12px 4px;text-transform:uppercase;letter-spacing:.08em}
+.recent a{display:flex;align-items:center;gap:10px;padding:7px 12px;border-radius:8px;color:var(--side-ink);text-decoration:none;font-size:.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recent a:hover{background:var(--side-hover)}
+.recent a[aria-current=page]{background:var(--side-sel);color:#fff}
+.recent .dot{width:8px;height:8px;border-radius:50%;flex:none;background:#9aa0a6}
+.dot.ready{background:var(--va)} .dot.processing{background:var(--primary);animation:pulse 1.2s infinite} .dot.failed{background:var(--err)}
+@keyframes pulse{50%{opacity:.3}}
+.side .foot{margin-top:auto;padding:10px 12px;font-size:.72rem;color:var(--side-muted)}
+.side .muted{color:var(--side-muted)}
+.main{min-width:0;padding:14px 20px 28px}
+.menu{display:none;border:0;background:transparent;padding:8px;border-radius:50%;cursor:pointer}
+.menu svg{width:22px;height:22px}
+
+/* buttons, inputs */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:8px;cursor:pointer;font-weight:500;color:var(--ink-2);white-space:nowrap}
+.btn:hover{background:var(--surface-2);border-color:#c5cfdc}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn.primary:hover{background:var(--primary-hover)}
+.btn.tonal{background:var(--soft);border-color:var(--soft);color:var(--on-soft)}
+.btn.tonal:hover{background:#c5e5dc}
+.btn.text{border-color:transparent;background:transparent}
+.btn svg{width:18px;height:18px}
+.iconbtn{border:0;background:transparent;width:40px;height:40px;border-radius:50%;display:inline-grid;place-items:center;cursor:pointer;color:var(--ink-2)}
+.iconbtn:hover{background:rgba(68,71,70,.08)}
+.iconbtn svg{width:22px;height:22px}
+label.f{display:grid;gap:4px;font-size:.8rem;color:var(--muted)}
+input[type=text],input[type=date],input[type=number],input[type=email],input[type=password],select,textarea{border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#fff;width:100%}
+textarea{resize:vertical;min-height:64px}
+.card{background:var(--surface);border-radius:var(--r);padding:22px;border:1px solid var(--line-2);box-shadow:0 1px 2px rgba(16,35,30,.04)}
+.card h2{font-size:1.05rem;font-weight:600;margin:0 0 4px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:2px 10px;border-radius:999px;font-size:.78rem;background:var(--line-2);color:var(--ink-2);font-weight:500}
+.chip .sw{width:8px;height:8px;border-radius:50%}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#303030;color:#f2f2f2;padding:10px 18px;border-radius:12px;font-size:.9rem;z-index:20;max-width:90vw}
+.status{max-width:560px;margin:90px auto;text-align:center}
+.status .spark{width:44px;height:44px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* home */
+.home{max-width:900px;margin:0 auto;padding:36px 0 0}
+.hello{font-size:2.1rem;line-height:1.15;font-weight:700;letter-spacing:-.02em;margin:0;color:var(--ink);max-width:100%}
+.hello-sub{font-size:1.15rem;line-height:1.4;color:var(--muted);font-weight:400;margin:6px 0 24px}
+.composer{background:var(--surface);border-radius:12px;padding:16px 16px 12px;border:1px solid var(--line-2);box-shadow:0 2px 8px rgba(16,35,30,.05)}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:26px 18px;text-align:center;cursor:pointer;color:var(--ink-2)}
+.drop.over{border-color:var(--primary);background:#eef7f4}
+.drop b{font-weight:500;font-size:1.02rem}
+.comp-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.comp-row .grow{flex:1}
+.go{width:48px;height:48px;border-radius:10px;border:0;background:var(--primary);color:#fff;display:grid;place-items:center;cursor:pointer}
+.go:disabled{background:#e3e3e3;color:#a0a0a0;cursor:default}
+.go svg{width:22px;height:22px}
+details.meta{margin-top:10px;border-top:1px solid var(--line-2);padding-top:8px}
+details.meta summary{cursor:pointer;color:var(--ink-2);font-weight:500;padding:4px 2px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px}
+.rec-prev{width:100%;max-height:340px;border-radius:16px;background:#000;margin-top:10px}
+.recdot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--err);margin-right:6px;animation:pulse 1s steps(2) infinite}
+progress{width:100%;height:6px;accent-color:var(--primary)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0}
+.feat{background:var(--surface);border-radius:10px;padding:16px;text-decoration:none;color:var(--ink);border:1px solid transparent}
+a.feat:hover{background:#fff;border-color:var(--line)}
+.feat b{display:block;font-weight:500;margin:8px 0 2px}
+.feat span{color:var(--muted);font-size:.86rem}
+.feat .ic{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;background:var(--soft);color:var(--on-soft)}
+.feat .ic svg{width:20px;height:20px}
+table.list{width:100%;border-collapse:collapse}
+table.list th,table.list td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line-2)}
+table.list th{font-weight:500;color:var(--muted);font-size:.8rem}
+table.list a{text-decoration:none;font-weight:500}
+
+/* study */
+.study-top{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:4px 0 14px}
+.study-top .title{flex:1;min-width:240px}
+.eyebrow{font-size:.8rem;color:var(--muted);display:flex;gap:8px;align-items:center}
+.study-top h1{font-size:1.45rem;font-weight:700;margin:2px 0 0;letter-spacing:-.01em}
+.study-top .sub{color:var(--muted);font-size:.88rem}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);padding:0;border-radius:0}
+.tabs a{padding:9px 14px;border-radius:0;text-decoration:none;color:var(--ink-2);font-weight:500;display:flex;gap:6px;align-items:center;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs a:hover{background:transparent;color:var(--ink)}
+.tabs a[aria-selected=true]{background:transparent;color:var(--primary);border-bottom-color:var(--primary)}
+.tabs svg{width:16px;height:16px}
+.bar-actions{display:flex;gap:8px;flex-wrap:wrap;width:100%;justify-content:flex-end}
+
+/* instructions */
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:14px;height:calc(100vh - 178px);min-height:540px}
+.pane{background:var(--surface);border-radius:var(--r);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.steps-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 8px;font-weight:500}
+.cycle-pick{padding:0 14px 10px}
+.steps{list-style:none;margin:0;padding:0 10px 10px;overflow:auto;flex:1}
+.step{padding:10px 14px;margin-bottom:4px;border-radius:16px;cursor:pointer;display:grid;grid-template-columns:22px 1fr;gap:2px 8px}
+.step:hover{background:var(--surface-2)}
+.step[aria-selected=true]{background:var(--soft);color:var(--on-soft)}
+.step .n{color:var(--muted);font-variant-numeric:tabular-nums;font-size:.85rem;padding-top:1px}
+.step .st-title{font-weight:500;line-height:1.35}
+.step .st-meta{grid-column:2;font-size:.8rem;color:var(--muted);display:flex;gap:10px;align-items:center}
+.step[aria-selected=true] .st-meta,.step[aria-selected=true] .n{color:#3c4a66}
+.sw{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.sw.value_add{background:var(--va)} .sw.necessary_nva{background:var(--nnva)} .sw.waste{background:var(--waste)}
+.center{display:flex;flex-direction:column;min-width:0;min-height:0}
+.step-no{font-size:.8rem;color:var(--muted);font-weight:500}
+.center h2{margin:0 0 10px;font-size:1.25rem;font-weight:500;line-height:1.3}
+.player{background:var(--surface);border-radius:var(--r);display:flex;flex-direction:column;min-height:0;flex:1;overflow:hidden}
+video{width:100%;flex:1;min-height:0;background:#000;object-fit:contain;display:block}
+.ctrl{padding:6px 14px 10px}
+.ctrl-row{display:flex;align-items:center;gap:6px;font-size:.85rem;font-variant-numeric:tabular-nums}
+.ctrl-row .grow{flex:1}
+.icon{border:0;background:transparent;padding:6px;cursor:pointer;display:inline-flex;border-radius:50%;color:var(--ink-2)}
+.icon:hover{background:rgba(68,71,70,.08)}
+.icon svg{width:20px;height:20px}
+.icon[aria-pressed=true]{color:var(--primary)} .icon[aria-pressed=false]{color:#9aa0a6}
+.play{background:var(--primary);color:#fff;width:40px;height:40px;justify-content:center;align-items:center}
+.play:hover{background:var(--primary-hover)}
+.speed{display:flex;align-items:center;gap:6px;color:var(--ink-2)}
+.speed select{width:auto;padding:2px 6px;border-radius:8px}
+input[type=range]{width:100%;accent-color:var(--primary);margin:6px 0 0}
+.right{gap:12px;padding:14px;overflow:auto}
+.cyc{display:flex;justify-content:space-between;align-items:baseline;padding:2px 4px}
+.cyc b{font-size:1.25rem;font-weight:500}
+.sec{background:var(--surface-2);border-radius:16px;display:flex;flex-direction:column}
+.sec-h{padding:12px 14px 0;font-weight:500;font-size:.9rem}
+.sec-b{padding:6px 14px 14px;display:flex;flex-direction:column}
+.sec-b ul{margin:0;padding-left:18px}
+.empty{color:var(--muted);font-size:.88rem}
+.edit-block{display:grid;gap:10px;background:var(--surface-2);border-radius:16px;padding:14px}
+.edit-block h3{margin:0;font-size:.95rem;font-weight:500}
+.check{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.88rem}
+.edit-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.timeline{position:relative;height:30px;margin-top:10px;background:var(--surface);border-radius:10px;cursor:pointer;overflow:hidden}
+.seg{position:absolute;top:0;bottom:0;border-right:2px solid var(--surface);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:600;color:#fff}
+.seg.value_add{background:var(--va)} .seg.necessary_nva{background:var(--nnva)} .seg.waste{background:var(--waste)}
+.seg.sel{box-shadow:inset 0 0 0 3px var(--ink)}
+.playhead{position:absolute;top:0;bottom:0;width:2px;background:var(--ink);pointer-events:none}
+.tr{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.tr li{display:grid;grid-template-columns:52px 1fr;gap:6px;padding:5px 8px;border-radius:10px;cursor:pointer;line-height:1.35}
+.tr li:hover{background:#fff}
+.tr li[aria-current=true]{background:var(--soft);color:var(--on-soft)}
+.tr .ts{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* dashboards */
+.stack{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.card{min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.kpi{background:var(--surface);border-radius:10px;border:1px solid var(--line-2);padding:16px 18px}
+.kpi .k{font-size:.8rem;color:var(--muted)}
+.kpi .v{font-size:1.7rem;font-weight:500;letter-spacing:-.01em;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .v small{font-size:.9rem;color:var(--muted);font-weight:400}
+.kpi .d{font-size:.8rem;color:var(--muted)}
+.state{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:500}
+.state.good{color:#146c2e} .state.bad{color:var(--err)}
+.row2{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+.chart{position:relative}
+.chart-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.82rem;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.bars{position:relative;display:flex;align-items:flex-end;gap:10px;height:220px;padding:0 4px 0 40px;border-bottom:1px solid var(--line)}
+.bars .gl{position:absolute;left:40px;right:0;border-top:1px solid var(--line-2);font-size:.72rem;color:var(--muted)}
+.bars .gl span{position:absolute;left:-40px;width:34px;text-align:right;transform:translateY(-50%)}
+.bars .ref{position:absolute;left:40px;right:0;border-top:2px dashed var(--ink-2);z-index:2;pointer-events:none}
+.bars .ref span{position:absolute;right:0;top:-20px;font-size:.75rem;color:var(--ink-2);background:rgba(255,255,255,.85);padding:0 4px;border-radius:4px}
+.bar{flex:1;max-width:110px;display:flex;flex-direction:column-reverse;gap:2px;position:relative;z-index:1;cursor:default}
+.bar .s{border-radius:0;min-height:2px}
+.bar .s:last-child{border-radius:4px 4px 0 0}
+.bar .val{position:absolute;top:-18px;left:0;right:0;text-align:center;font-size:.75rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.bar.x .s{background:repeating-linear-gradient(45deg,#c4cad3 0 4px,#e3e7ec 4px 8px)!important}
+.bar.hot{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
+.xl{display:flex;gap:10px;padding:6px 4px 0 40px;font-size:.75rem;color:var(--muted)}
+.xl span{flex:1;max-width:110px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar{display:flex;gap:2px;height:28px;border-radius:6px;overflow:hidden;margin:6px 0 10px}
+.hbar div{min-width:2px}
+.split-rows{display:grid;gap:6px;font-size:.88rem}
+.split-rows div{display:flex;justify-content:space-between;gap:10px}
+.tip{position:fixed;pointer-events:none;background:#303030;color:#f2f2f2;padding:6px 10px;border-radius:8px;font-size:.8rem;z-index:30;max-width:280px}
+.tbl{width:100%;border-collapse:collapse;font-size:.86rem}
+.tbl th,.tbl td{padding:7px 8px;border-bottom:1px solid var(--line-2);text-align:left;vertical-align:top}
+.tbl th{font-weight:500;color:var(--muted);font-size:.78rem;background:var(--surface-2)}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl .x{color:#9aa0a6;text-decoration:line-through}
+.tbl .hi{color:var(--err);font-weight:600}
+.tbl .lo{text-decoration:underline;font-weight:600}
+.scroll-x{overflow-x:auto}
+
+/* kaizen */
+.ideas{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-top:14px}
+.idea{border:1px solid var(--line);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:8px;background:#fff}
+.idea b{font-weight:500;font-size:1rem;line-height:1.3}
+.idea p{margin:0;color:var(--ink-2);font-size:.88rem}
+.idea .meta{display:flex;gap:6px;flex-wrap:wrap}
+.idea .save{font-size:1.3rem;font-weight:500;color:var(--on-soft)}
+.idea .btn{margin-top:auto;align-self:flex-start}
+.act td input,.act td select{padding:5px 8px;border-radius:8px;font-size:.85rem}
+
+/* copilot */
+.chatwrap{display:flex;flex-direction:column;height:calc(100vh - 178px);min-height:520px;background:var(--surface);border-radius:var(--r);overflow:hidden}
+.msgs{flex:1;overflow:auto;padding:24px 24px 8px;display:flex;flex-direction:column;gap:18px}
+.msg{max-width:860px;width:100%;margin:0 auto;display:flex;gap:14px}
+.msg.user{justify-content:flex-end}
+.msg.user .bubble{background:var(--line-2);border-radius:22px 22px 6px 22px;padding:10px 16px;max-width:70%;white-space:pre-wrap}
+.msg.model .spark{width:28px;height:28px;margin-top:2px}
+.msg.model .body{flex:1;min-width:0}
+.md h1,.md h2,.md h3{font-weight:500;margin:14px 0 6px;line-height:1.3} .md h1{font-size:1.2rem} .md h2{font-size:1.08rem} .md h3{font-size:1rem}
+.md p{margin:6px 0} .md ul,.md ol{margin:6px 0;padding-left:22px}
+.md code{background:var(--line-2);padding:1px 5px;border-radius:5px;font-size:.88em}
+.md table{border-collapse:collapse;margin:8px 0;font-size:.86rem;display:block;overflow-x:auto}
+.md th,.md td{border:1px solid var(--line);padding:6px 9px;text-align:left;vertical-align:top}
+.md th{background:var(--surface-2);font-weight:500}
+.msg-tools{display:flex;gap:4px;margin-top:4px}
+.thinking{display:flex;gap:12px;align-items:center;color:var(--muted)}
+.thinking .spark{animation:pulse 1.6s ease-in-out infinite}
+.hello-chat{margin:auto;max-width:860px;width:100%;padding:10px 0}
+.hello-chat .hello{font-size:2rem}
+.sugg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+.sugg button{border:0;background:var(--surface-2);border-radius:18px;padding:14px;text-align:left;cursor:pointer;min-height:96px;display:flex;flex-direction:column;gap:4px}
+.sugg button:hover{background:#e9eef6}
+.sugg b{font-weight:500} .sugg span{color:var(--muted);font-size:.84rem}
+.chatbar{padding:10px 24px 18px}
+.chatbox{max-width:860px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:var(--surface-2);border-radius:28px;padding:8px 8px 8px 20px;border:1px solid var(--line-2)}
+.chatbox textarea{border:0;background:transparent;resize:none;min-height:24px;max-height:180px;padding:8px 0;outline:none}
+.chatnote{max-width:860px;margin:6px auto 0;font-size:.75rem;color:var(--muted);text-align:center}
+
+/* work chart + breakdown */
+.chart-layout{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:14px;align-items:start}
+.chart-img{background:#fff;border-radius:16px;overflow:auto;border:1px solid var(--line-2)}
+.chart-img img{width:100%;display:block}
+.loc-tbl td{padding:4px 4px}
+#layoutEd{overflow:hidden}
+#layoutEd svg{max-height:520px}
+#locPanel{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+table.tpl-tbl{table-layout:fixed;min-width:900px}
+table.tpl-tbl input[type=text],table.tpl-tbl select{width:100%;min-width:0}
+table.tpl-tbl th,table.tpl-tbl td{overflow:hidden}
+.loc-tbl input,.loc-tbl select{padding:4px 6px;border-radius:8px;font-size:.82rem}
+.loc-tbl .lid{font-weight:600;color:var(--on-soft);white-space:nowrap}
+.warnbox{background:#fff4e5;border:1px solid #f6d7a7;border-radius:14px;padding:10px 12px;font-size:.86rem;color:#7a4b00}
+.okbox{background:#e6f4ea;border:1px solid #b7dfc3;border-radius:14px;padding:10px 12px;font-size:.86rem;color:#146c2e}
+.bd-layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;align-items:start}
+.bd-tbl tr{cursor:pointer}
+.bd-tbl tr.sel td{background:var(--soft)}
+.bd-tbl td.tr-cell{white-space:pre-line;color:var(--ink-2);font-size:.82rem;min-width:260px}
+.bd-tbl select{padding:4px 6px;border-radius:8px;font-size:.82rem;max-width:200px}
+.sticky{position:sticky;top:14px}
+.sticky video{border-radius:16px;max-height:300px}
+@media (max-width:1180px){.chart-layout,.bd-layout{grid-template-columns:1fr}}
+
+/* line balancing */
+.picker{display:grid;gap:6px;max-height:260px;overflow:auto}
+.picker label{display:flex;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;cursor:pointer}
+.picker label:hover{background:var(--surface-2)}
+.order{display:grid;gap:6px}
+.order div{display:flex;align-items:center;gap:8px;background:var(--surface-2);border-radius:12px;padding:6px 6px 6px 12px}
+.order div span{flex:1}
+.order .iconbtn{width:32px;height:32px}
+.order .iconbtn svg{width:18px;height:18px}
+
+@media (max-width:1180px){.layout{grid-template-columns:1fr;height:auto}.steps{max-height:340px}video{max-height:60vh}.row2{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;z-index:15;left:0;top:0;width:280px;background:var(--side);transform:translateX(-100%);transition:transform .2s;box-shadow:0 0 24px rgba(0,0,0,.15)}
+  .side.open{transform:none}
+  .menu{display:inline-grid}
+  .grid4{grid-template-columns:1fr 1fr}.features,.sugg{grid-template-columns:1fr}
+  .hello{font-size:2rem}.hello-sub{font-size:1.5rem}
+  .main{padding:10px 14px 24px}
+}
+/* sign in */
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);background:var(--bg)}
+.auth-side{background:var(--side) url(/brand/camo-strong.svg) repeat;color:var(--side-ink);padding:48px;display:flex;flex-direction:column;gap:18px;justify-content:center}
+.auth-side .panel{background:rgba(30,32,27,.82);border-left:4px solid var(--primary);padding:24px 26px;border-radius:6px;display:grid;gap:14px;max-width:520px}
+.auth-card .wm{height:46px;width:auto;justify-self:center;margin-bottom:4px}
+.auth-side h1{color:#fff;font-size:2.2rem;line-height:1.15;margin:0;letter-spacing:-.02em}
+.auth-side h1 i{font-style:normal;color:var(--accent)}
+.auth-side h1{font-size:1.9rem}
+.auth-side p{margin:0;color:var(--side-ink);max-width:460px}
+.auth-side li{margin:6px 0;color:var(--side-ink)}
+.auth-main{display:grid;place-items:center;padding:32px 18px}
+.auth-card{width:min(420px,100%);background:var(--surface);border:1px solid var(--line-2);border-radius:12px;padding:26px;display:grid;gap:12px}
+.auth-tabs{display:flex;border-bottom:1px solid var(--line)}
+.auth-tabs button{flex:1;border:0;background:transparent;padding:10px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.auth-tabs button[aria-selected=true]{color:var(--primary);border-bottom-color:var(--primary)}
+.seg2{display:flex;gap:6px}
+.seg2 label{flex:1;display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.86rem}
+.seg2 input{accent-color:var(--primary)}
+.acct{border-top:1px solid rgba(255,255,255,.08);margin-top:8px;padding:10px 12px 0;font-size:.8rem;color:var(--side-ink);display:grid;gap:4px}
+.acct b{color:#fff;font-weight:600}
+.acct code{background:rgba(255,255,255,.08);padding:1px 6px;border-radius:5px;color:var(--accent);font-size:.82rem}
+.acct button{border:0;background:transparent;color:var(--side-muted);cursor:pointer;padding:0;text-align:left;font-size:.8rem}
+.acct button:hover{color:#fff}
+@media (max-width:900px){.auth-wrap{grid-template-columns:1fr}.auth-side{padding:28px 20px}}
+
+/* teach (feedback) */
+.teach-fab{position:fixed;right:22px;bottom:22px;z-index:12;display:flex;align-items:center;gap:8px;border:0;border-radius:10px;padding:11px 16px;background:var(--side);color:#fff;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(16,35,30,.25)}
+.teach-fab:hover{background:#1a3830}
+.teach-fab svg{width:18px;height:18px;color:var(--accent)}
+.teach-fab{background:var(--side) url(/brand/camo-dark.svg) repeat;border:1px solid #3a3d34}
+.teach{position:fixed;top:0;right:0;bottom:0;width:min(440px,100vw);z-index:16;background:var(--surface);border-left:1px solid var(--line);box-shadow:-10px 0 30px rgba(16,35,30,.12);display:flex;flex-direction:column}
+.teach header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line-2)}
+.teach header b{flex:1;font-size:1rem}
+.teach .tb{flex:1;overflow:auto;padding:14px 16px;display:grid;gap:12px;align-content:start}
+.teach .ex{display:flex;flex-wrap:wrap;gap:6px}
+.teach .ex button{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:4px 10px;font-size:.78rem;cursor:pointer;color:var(--ink-2)}
+.teach .ex button:hover{border-color:var(--primary);color:var(--primary)}
+.teach .reply{background:var(--surface-2);border-radius:10px;padding:10px 12px;font-size:.88rem}
+.teach .prop{display:grid;gap:6px}
+.teach .prop label{display:grid;grid-template-columns:20px 1fr;gap:8px;align-items:start;border:1px solid var(--line-2);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:.86rem}
+.teach .prop label:hover{border-color:var(--line)}
+.teach .prop small{display:block;color:var(--muted);font-size:.78rem}
+.teach .prop .ba{font-variant-numeric:tabular-nums;color:var(--ink-2);font-size:.8rem}
+.teach .ba s{color:var(--muted)}
+.teach .hist{border-top:1px solid var(--line-2);padding-top:10px;font-size:.8rem;color:var(--muted)}
+.teach .hist li{margin:4px 0}
+.rule-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line-2);font-size:.88rem}
+.rule-row:first-of-type{border-top:0}
+.rule-row .chip{flex:none}
+.rule-row span.t{flex:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+/* =====================================================================
+   Base glass theme (the accessible learning theme at the end overrides it),
+   one consistent set of controls. This layer overrides everything above.
+   ===================================================================== */
+:root{
+  --bg:#e9eae4;
+  --glass:rgba(243,243,239,.93); --glass-strong:rgba(248,248,245,.97); --glass-line:rgba(255,255,255,.95);
+  --glass-dark:rgba(15,18,13,.88);
+  --ink:#0f120d; --ink-2:#272b23; --muted:#535749; --line:rgba(23,28,18,.16); --line-2:rgba(23,28,18,.08);
+  --primary:#487037; --primary-hover:#3d6030; --primary-ink:#ffffff; --soft:rgba(72,112,55,.12); --on-soft:#26401b;
+  --ring:0 0 0 3px rgba(72,112,55,.28);
+  --shadow-sm:0 1px 2px rgba(23,28,18,.06),0 1px 1px rgba(23,28,18,.04);
+  --shadow:0 1px 0 #fff inset,0 0 0 1px rgba(23,28,18,.06),0 2px 4px rgba(23,28,18,.06),0 18px 40px -18px rgba(23,28,18,.45);
+  --shadow-lg:0 24px 60px -20px rgba(23,28,18,.38);
+  --r:16px; --r-sm:10px; --ctl:36px;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+html{-webkit-font-smoothing:antialiased}
+/* SVG drawings use tiny font sizes scaled up: hinted metrics at that size collapse the letters */
+svg text{text-rendering:geometricPrecision;letter-spacing:0;font-feature-settings:normal;font-kerning:none}
+body{background:var(--bg);font-feature-settings:"cv11","ss01","tnum" 0;letter-spacing:-.003em}
+body::before{content:"";position:fixed;inset:-80px;z-index:-2;pointer-events:none;
+  background:url(/brand/camo-soft.svg?v=4) 0 0/1200px repeat;filter:blur(44px) saturate(1.1);transform:translateZ(0)}
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(1400px 800px at 70% 0%,rgba(90,100,70,.18),transparent 65%),
+             linear-gradient(180deg,rgba(12,15,9,.52) 0%,rgba(12,15,9,.40) 50%,rgba(12,15,9,.50) 100%)}
+::selection{background:rgba(72,112,55,.22)}
+:focus-visible{outline:none;box-shadow:var(--ring)!important;border-radius:var(--r-sm)}
+h1,h2,h3{letter-spacing:-.018em}
+.menu{color:#fff;background:rgba(15,18,13,.35);border-radius:10px}
+
+/* glass surfaces */
+.card,.pane,.player,.composer,.kpi,.chatwrap,.feat,.idea,.auth-card{
+  background:var(--glass);-webkit-backdrop-filter:blur(24px) saturate(60%);backdrop-filter:blur(24px) saturate(60%);
+  border:1px solid rgba(255,255,255,.75);box-shadow:var(--shadow);border-radius:var(--r)}
+.card{padding:22px 24px}
+.card h2{font-size:1.02rem;font-weight:650;color:var(--ink)}
+.chart-img,.sec,.edit-block{background:rgba(255,255,255,.7);border:1px solid var(--line-2);border-radius:12px}
+#layoutEd{background:rgba(255,255,255,.75)!important;border:1px solid var(--line-2)!important;border-radius:12px!important}
+
+/* sidebar: dark frosted glass over the camo */
+.side{background:rgba(30,32,25,.9)!important;-webkit-backdrop-filter:blur(26px) saturate(80%);backdrop-filter:blur(26px) saturate(80%);
+  border-right:1px solid rgba(255,255,255,.06)!important;padding:16px 12px}
+.brand{border-bottom:1px solid rgba(255,255,255,.07)}
+.new-btn{height:40px;padding:0 16px;border-radius:12px;font-weight:600;letter-spacing:-.01em;width:calc(100% - 8px);justify-content:center;
+  background:linear-gradient(180deg,#56844a,#487037);box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 8px 18px -8px rgba(72,112,55,.8);transition:transform .15s var(--ease),filter .15s}
+.new-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.nav a,.recent a{border-radius:10px;transition:background .15s var(--ease),color .15s}
+.nav a[aria-current=page]{background:rgba(255,255,255,.09);box-shadow:inset 2px 0 0 #8fb77a;color:#fff}
+.recent a[aria-current=page]{background:rgba(255,255,255,.09);color:#fff}
+.side h3{color:rgba(220,222,210,.55)}
+.acct{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:10px 12px;margin:8px 0 0}
+
+/* buttons: one system */
+.btn{height:var(--ctl);padding:0 14px;border-radius:var(--r-sm);font-weight:600;font-size:.86rem;letter-spacing:-.005em;gap:7px;
+  background:#fff;border:1px solid var(--line);color:var(--ink-2);box-shadow:var(--shadow-sm);
+  transition:background .15s var(--ease),border-color .15s,box-shadow .15s,transform .15s var(--ease)}
+.btn:hover{background:#fff;border-color:rgba(40,46,34,.24);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn svg{width:16px;height:16px;opacity:.8}
+.btn.primary{background:linear-gradient(180deg,#538045,#487037);border-color:#3f6431;color:#fff;
+  box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 6px 14px -6px rgba(72,112,55,.7)}
+.btn.primary:hover{background:linear-gradient(180deg,#5b8b4c,#4d773b)}
+.btn.primary svg{opacity:1}
+.btn.tonal{background:linear-gradient(180deg,#6b7346,#5b6236);border-color:#4f5530;color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.18) inset,0 6px 14px -6px rgba(70,76,40,.7)}
+.btn.tonal:hover{background:linear-gradient(180deg,#737b4c,#62693a)}
+.btn.tonal svg{opacity:1}
+a.btn,a.btn:hover{text-decoration:none}
+.study-top>.btn.text{background:rgba(255,255,255,.88);border:1px solid #fff;color:var(--ink-2);box-shadow:var(--shadow-sm);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.study-top>.btn.text:hover{background:#fff}
+.chart-head a{text-decoration:none;font-weight:600}
+.btn.text{background:transparent;border-color:transparent;box-shadow:none;color:var(--primary)}
+.btn.text:hover{background:rgba(72,112,55,.08);transform:none}
+.btn:disabled,.btn:disabled:hover{opacity:1;transform:none;cursor:default;color:rgba(40,46,34,.38)!important;background:rgba(255,255,255,.42)!important;border-color:var(--line)!important;box-shadow:none!important}
+.btn:disabled svg{opacity:.4}
+.iconbtn{border-radius:10px;transition:background .15s}
+.iconbtn:hover{background:rgba(40,46,34,.07)}
+.go{border-radius:12px;background:linear-gradient(180deg,#538045,#487037);box-shadow:0 6px 14px -6px rgba(72,112,55,.7)}
+.go:disabled{background:rgba(40,46,34,.08);box-shadow:none}
+
+/* tabs: segmented control */
+.study-top{gap:14px 16px;margin:6px 0 18px;align-items:center}
+.study-top h1{font-size:1.65rem;font-weight:750;letter-spacing:-.025em;color:var(--ink)}
+.study-top .title{background:rgba(243,243,239,.93);-webkit-backdrop-filter:blur(18px) saturate(60%);backdrop-filter:blur(18px) saturate(60%);border:1px solid #fff;border-radius:14px;padding:10px 16px;box-shadow:var(--shadow-sm);flex:0 1 auto}
+.eyebrow{font-size:.74rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.tabs{display:inline-flex;gap:2px;padding:4px;border:1px solid rgba(255,255,255,.9);border-bottom:1px solid rgba(255,255,255,.9);border-radius:14px;
+  background:rgba(238,238,233,.9);-webkit-backdrop-filter:blur(16px) saturate(60%);backdrop-filter:blur(16px) saturate(60%);box-shadow:var(--shadow-sm)}
+.tabs a{height:34px;padding:0 14px;border-radius:10px;border-bottom:0;margin:0;font-size:.86rem;font-weight:560;color:var(--ink-2);transition:background .15s var(--ease),color .15s}
+.tabs a:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+.tabs a[aria-selected=true]{background:var(--primary);color:#fff;box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 6px 14px -6px rgba(72,112,55,.8)}
+.tabs a[aria-selected=true] svg{color:#fff}
+.tabs svg{width:15px;height:15px}
+.bar-actions{gap:6px}
+.bar-actions .btn{height:32px;font-size:.82rem;padding:0 12px}
+
+/* inputs */
+input[type=text],input[type=date],input[type=number],input[type=email],input[type=password],select,textarea{
+  border:1px solid var(--line);border-radius:var(--r-sm);background:#fff;min-height:var(--ctl);padding:7px 11px;
+  transition:border-color .15s,box-shadow .15s,background .15s}
+input:hover,select:hover,textarea:hover{border-color:rgba(40,46,34,.26)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);box-shadow:var(--ring);background:#fff}
+.loc-tbl input,.loc-tbl select{min-height:32px;padding:4px 8px;border-radius:8px}
+label.f{color:var(--muted);font-weight:500;font-size:.78rem}
+input[type=checkbox],input[type=radio]{accent-color:var(--primary);width:16px;height:16px}
+
+/* tables */
+.tbl{font-size:.85rem}
+.tbl th{background:transparent;color:#4a4e42;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid var(--line)}
+.tbl td{border-bottom:1px solid var(--line-2)}
+.tbl tbody tr{transition:background .12s}
+.tbl tbody tr:hover td{background:rgba(255,255,255,.55)}
+.bd-tbl tr.sel td{background:rgba(72,112,55,.10)}
+
+/* notices, chips */
+.warnbox,.okbox{border-radius:12px;padding:11px 14px;font-size:.85rem;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.warnbox{background:rgba(255,243,214,.78);border:1px solid rgba(201,162,39,.35);border-left:3px solid #c9a227;color:#6a4f00}
+.okbox{background:rgba(226,240,220,.8);border:1px solid rgba(72,112,55,.25);border-left:3px solid var(--primary);color:#2c4a21}
+.chip{background:rgba(40,46,34,.07);color:var(--ink-2);border-radius:999px;font-weight:550}
+.toast{background:rgba(20,23,18,.86);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;box-shadow:var(--shadow-lg);padding:11px 16px}
+
+/* home */
+.hello{font-size:2.3rem;font-weight:800;letter-spacing:-.035em;color:#fff;text-shadow:0 2px 18px rgba(15,18,13,.35)}
+.hello-sub{font-size:1.05rem;color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(15,18,13,.4);font-weight:500}
+.drop{border:1.5px dashed rgba(40,46,34,.22);border-radius:14px;background:rgba(255,255,255,.4);transition:border-color .15s,background .15s}
+.drop:hover,.drop.over{border-color:var(--primary);background:rgba(72,112,55,.06)}
+.feat .ic{background:rgba(72,112,55,.12);color:var(--on-soft);border-radius:10px}
+a.feat:hover{background:var(--glass-strong)}
+
+/* teach */
+.teach-fab{height:44px;padding:0 18px;border-radius:14px;background:var(--glass-dark)!important;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.08)!important;box-shadow:var(--shadow-lg),0 0 0 4px rgba(72,112,55,.14);transition:transform .15s var(--ease)}
+.teach-fab:hover{transform:translateY(-2px)}
+.teach-fab svg{color:#9fc48a}
+.teach{background:rgba(238,238,233,.96);-webkit-backdrop-filter:blur(28px) saturate(60%);backdrop-filter:blur(28px) saturate(60%);
+  border-left:1px solid var(--glass-line);box-shadow:-24px 0 60px -20px rgba(23,28,18,.35)}
+.teach .reply{background:rgba(255,255,255,.75);border:1px solid var(--line-2)}
+.teach .prop label{background:rgba(255,255,255,.65);border-color:var(--line-2);border-radius:12px}
+.teach .prop label:hover{border-color:rgba(72,112,55,.35)}
+.teach .ex button{background:rgba(255,255,255,.7)}
+
+/* sign-in */
+.auth-wrap{background:transparent}
+.auth-side{background:rgba(20,23,18,.55)!important;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.auth-side .panel{background:rgba(20,23,18,.62);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-left:3px solid var(--primary);border-radius:16px}
+.auth-card{padding:30px}
+.auth-tabs{border-bottom:0;background:rgba(40,46,34,.06);border-radius:12px;padding:4px;gap:2px}
+.auth-tabs button{border-bottom:0;margin:0;border-radius:9px;height:34px;padding:0}
+.auth-tabs button[aria-selected=true]{background:#fff;box-shadow:0 1px 2px rgba(23,28,18,.1)}
+.seg2 label{border-radius:10px;background:rgba(255,255,255,.6)}
+
+/* video and timeline */
+video{border-radius:12px}
+.timeline{border-radius:10px;background:rgba(255,255,255,.7)}
+
+@media (prefers-reduced-transparency:reduce){
+  .card,.pane,.player,.composer,.kpi,.side,.teach,.tabs{-webkit-backdrop-filter:none;backdrop-filter:none;background:#f7f7f3}
+  .side{background:#22251f!important}
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .card,.pane,.player,.composer,.kpi{background:rgba(255,255,255,.94)}
+}
+/* =====================================================================
+   Accessible learning theme. Calm and high-contrast, with large targets
+   and a focus ring that is never subtle. Overrides the layers above.
+   ===================================================================== */
+:root{
+  --bg:#f3f5f8; --surface:#fff; --surface-2:#f7f9fb;
+  --ink:#0d1520; --ink-2:#1f2a37; --muted:#4b5767; --line:#c9d2dc; --line-2:#e3e8ee;
+  --primary:#0b5cad; --primary-hover:#094c90; --soft:#e5f0fb; --on-soft:#083b70;
+  --accent:#ffbf1f; --side:#0c1f33; --side-ink:#f1f5f9; --side-muted:#a9b8c8;
+  --ring:0 0 0 3px #fff,0 0 0 6px #ffbf1f;
+  --shadow-sm:0 1px 2px rgba(13,21,32,.06);
+  --shadow:0 1px 3px rgba(13,21,32,.08),0 8px 24px -14px rgba(13,21,32,.25);
+  --r:14px; --r-sm:10px; --ctl:42px;
+}
+body{font-size:16px;background:var(--bg);color:var(--ink);letter-spacing:0}
+html.big body{font-size:19px}
+body::before,body::after{content:none;display:none}
+:focus-visible{outline:3px solid #0d1520!important;outline-offset:3px;box-shadow:var(--ring)!important}
+a{color:var(--primary)}
+.muted{color:var(--muted)}
+
+/* solid surfaces: no blur, no camo */
+.card,.pane,.player,.composer,.kpi,.chatwrap,.feat,.idea,.auth-card,.study-top .title,.tabs{
+  background:var(--surface)!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  border:1px solid var(--line-2)!important;box-shadow:var(--shadow)}
+.chart-img,.sec,.edit-block{background:var(--surface-2);border:1px solid var(--line-2)}
+
+/* sidebar */
+.side{background:var(--side)!important;-webkit-backdrop-filter:none;backdrop-filter:none;border-right:0!important}
+.brand .mark{background:#fff}
+.brand b{letter-spacing:.08em}
+.brand .ls{color:var(--accent)}
+.brand small{color:#cfe0f2;font-size:.78rem}
+.new-btn{background:var(--accent)!important;color:#1a1300!important;box-shadow:none!important;height:46px;font-size:.98rem}
+.new-btn svg{color:#1a1300}
+.nav a,.recent a{color:var(--side-ink);font-size:.95rem;padding:10px 12px}
+.nav a[aria-current=page],.recent a[aria-current=page]{background:rgba(255,255,255,.12);box-shadow:inset 3px 0 0 var(--accent);color:#fff}
+.side h3{color:var(--side-muted)!important;font-size:.75rem}
+.side .foot{color:var(--side-muted);font-size:.8rem;line-height:1.45}
+.a11y{display:grid;gap:6px;margin-top:auto;padding:8px 4px 0}
+.a11y-btn{display:flex;align-items:center;gap:10px;height:42px;padding:0 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);
+  background:transparent;color:var(--side-ink);cursor:pointer;font-weight:600;font-size:.9rem;text-align:left}
+.a11y-btn svg{width:18px;height:18px}
+.a11y-btn .aa{font-weight:800;width:18px}.a11y-btn .aa span{font-size:1.25em}
+.a11y-btn:hover{background:rgba(255,255,255,.08)}
+.a11y-btn[aria-pressed=true]{background:var(--accent);color:#1a1300;border-color:var(--accent)}
+.side .foot{margin-top:8px}
+
+/* buttons */
+.btn{height:var(--ctl);font-size:.95rem;background:#fff;border:1.5px solid var(--line);color:var(--ink);box-shadow:none}
+.btn:hover{border-color:var(--primary);background:#fff}
+.btn.primary,.btn.tonal,.go{background:var(--primary)!important;border-color:var(--primary)!important;color:#fff;box-shadow:none!important}
+.btn.primary:hover,.btn.tonal:hover,.go:hover{background:var(--primary-hover)!important}
+.go:disabled{background:#d5dce4!important}
+.btn.text{color:var(--primary);border-color:transparent;background:transparent}
+.btn.text:hover{background:var(--soft)}
+.bar-actions .btn{height:38px;font-size:.9rem}
+
+/* home */
+.home{max-width:980px;padding-top:28px}
+.kicker{margin:0 0 6px;color:var(--primary);font-weight:700;font-size:.95rem;letter-spacing:.01em}
+.hello{color:var(--ink);text-shadow:none;font-size:2.5rem;line-height:1.1}
+.hello-sub{color:var(--ink-2);text-shadow:none;font-size:1.15rem;line-height:1.5;max-width:760px;margin:10px 0 22px}
+.drop{border:2px dashed var(--line);background:var(--surface-2);padding:26px}
+.drop b{font-size:1.1rem}
+.drop:hover,.drop.over{border-color:var(--primary);background:var(--soft)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+label.f{color:var(--ink-2);font-size:.9rem;font-weight:600}
+.features{grid-template-columns:repeat(4,1fr)!important;gap:12px;margin:24px 0}
+.feat{padding:18px}
+.feat b{font-weight:700;font-size:1rem;margin:10px 0 4px}
+.feat span{color:var(--muted);font-size:.9rem;line-height:1.45}
+.feat .ic{background:var(--soft);color:var(--primary)}
+.sec-title{font-size:1.2rem;margin:8px 0 10px}
+.lessons{display:grid;gap:10px}
+.lesson{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#fff;border:1.5px solid var(--line-2);border-radius:var(--r);
+  text-decoration:none;color:var(--ink);box-shadow:var(--shadow-sm)}
+.lesson:hover{border-color:var(--primary)}
+.lesson-ic{width:42px;height:42px;border-radius:10px;background:var(--soft);color:var(--primary);display:grid;place-items:center;flex:none}
+.lesson-ic svg{width:22px;height:22px}
+.lesson-b{display:flex;flex-direction:column;flex:1;min-width:0}
+.lesson-b b{font-size:1.05rem}
+@media (max-width:900px){.features{grid-template-columns:1fr 1fr!important}.grid2{grid-template-columns:1fr}.hello{font-size:2rem}}
+@media (max-width:560px){.features{grid-template-columns:1fr!important}}
+
+/* lesson header and tabs */
+.study-top h1{font-size:1.7rem;color:var(--ink)}
+.eyebrow{color:var(--primary);font-size:.8rem}
+.tabs a{height:40px;font-size:.95rem;color:var(--ink-2)}
+.tabs a:hover{background:var(--soft)}
+.tabs a[aria-selected=true]{background:var(--primary);color:#fff;box-shadow:none}
+
+/* learn view */
+.step-no{font-size:.9rem;font-weight:700;color:var(--primary);text-transform:uppercase;letter-spacing:.05em}
+.center h2{font-size:1.5rem;font-weight:700;line-height:1.25}
+.vwrap{position:relative;flex:1;min-height:0;display:flex;background:#000}
+.vwrap video{border-radius:0}
+.cap{background:#0d1520;color:#fff;font-size:1.2rem;line-height:1.35;font-weight:600;padding:10px 16px;text-align:center;
+  min-height:calc(2.7em + 20px);display:flex;align-items:center;justify-content:center}
+html.big .cap{font-size:1.5rem}
+.icon.cc{font-weight:800;font-size:.82rem;width:38px;height:32px;border-radius:8px;border:2px solid currentColor;justify-content:center;align-items:center}
+.icon[aria-pressed=false]{color:#8a95a3}
+.ctrl-row{font-size:.95rem}
+.play{width:46px;height:46px}
+.keys{font-size:.85rem;margin:8px 2px 0}
+kbd{font:600 .8rem/1 var(--font);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 6px;background:#fff;color:var(--ink)}
+.step{border-radius:12px;padding:12px 14px}
+.step .st-title{font-weight:600}
+.step[aria-selected=true]{background:var(--soft)!important;box-shadow:inset 3px 0 0 var(--primary)}
+.step .st-meta{font-size:.85rem}
+.unclear{color:#8a4b00;font-weight:600}
+.sec{border-radius:12px}
+.sec-h{font-weight:700;font-size:.95rem}
+.explain{padding:14px 16px;gap:10px}
+.explain .plain{margin:0;font-size:1.1rem;line-height:1.5;font-weight:500;color:var(--ink)}
+.facts{display:grid;gap:6px;font-size:.92rem}
+.facts span{display:flex;justify-content:space-between;gap:12px}
+.facts b{color:var(--muted);font-weight:600}
+.tr li{font-size:.95rem}
+.tr li[aria-current=true]{background:var(--soft);color:var(--on-soft);font-weight:600}
+.howto{margin:8px 0 0;padding-left:18px;display:grid;gap:8px;line-height:1.45}
+.bd-tbl tr.sel td{background:var(--soft)}
+.bd-tbl tr{cursor:pointer}
+.tbl{font-size:.92rem}
+.tbl th{color:var(--ink-2);font-size:.78rem}
+.warnbox,.okbox{background:#eef3f8;border:1px solid var(--line-2);border-left:3px solid #7b8ca3;color:var(--ink-2);-webkit-backdrop-filter:none;backdrop-filter:none}
+input.guess,select.guess{border-style:dashed;border-color:#8a9bb0}
+.btn.primary:disabled,.btn.primary:disabled:hover{background:#dfe5ec!important;border-color:#dfe5ec!important;color:#5b6573!important}
+
+/* suggest a fix */
+.teach-fab{background:var(--side)!important;color:#fff;border:0!important;box-shadow:var(--shadow)}
+.teach-fab svg{color:var(--accent)}
+.teach{background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none;border-left:1px solid var(--line)}
+.toast{background:#0d1520}
+
+/* sign-in */
+.auth-side{background:var(--side)!important}
+
+/* high contrast */
+html.hc{--bg:#fff;--surface:#fff;--surface-2:#fff;--ink:#000;--ink-2:#000;--muted:#1a1a1a;--line:#000;--line-2:#000;--primary:#00387a;--primary-hover:#002a5c;--soft:#ffe98a;--on-soft:#000}
+html.hc .card,html.hc .pane,html.hc .player,html.hc .composer,html.hc .feat,html.hc .lesson,html.hc .sec,html.hc .tabs,html.hc .study-top .title,html.hc .btn{border:2px solid #000!important;box-shadow:none!important}
+html.hc .side{background:#000!important}
+html.hc .cap{background:#000;color:#ffe600;border:2px solid #fff;font-size:1.4rem}
+html.hc .tr li[aria-current=true],html.hc .step[aria-selected=true]{outline:2px solid #000}
+html.hc .muted{color:#1a1a1a}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="spark" viewBox="0 0 32 32"><image href="/brand/mark.svg" width="32" height="32"/></symbol>
+</defs></svg>
+<div class="shell">
+  <aside class="side" id="side">
+    <a class="brand" href="#/"><span class="mark"><img src="/brand/mark.svg?v=4" alt=""></span><span><b>PROCESS</b><span class="ls">ANNOTATION</span><small>Learn any task, step by step</small></span></a>
+    <a class="new-btn" href="#/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add a task video</a>
+    <nav class="nav" aria-label="Main">
+      <a href="#/" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>Home</a>
+      <a href="#/line" data-nav="line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 21V10M10 21V4M15 21v-8M20 21V7"/></svg>Line balancing</a>
+    </nav>
+    <h3>Lessons</h3>
+    <div class="recent" id="recent"><span class="muted" style="padding:8px 14px;font-size:.85rem">Loading…</span></div>
+    <div class="a11y" role="group" aria-label="Display">
+      <button type="button" class="a11y-btn" id="bigText" aria-pressed="false"><span aria-hidden="true" class="aa">A<span>A</span></span>Larger text</button>
+      <button type="button" class="a11y-btn" id="hiCon" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>High contrast</button>
+    </div>
+    <div class="foot" id="sideFoot">No sound needed: every step is shown, looped and written out. Ask before filming people at work; videos are read by a cloud AI model.</div>
+    <div class="acct" id="acct" hidden></div>
+  </aside>
+  <div class="main">
+    <button class="menu" id="menu" aria-label="Open menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <main id="view"></main>
+  </div>
+</div>
+<button class="teach-fab" id="teachFab" hidden title="Tell the app what is wrong in this lesson"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>Suggest a fix</button>
+<aside class="teach" id="teach" hidden aria-label="Suggest a fix"></aside>
+<div id="toast" class="toast" hidden></div>
+<div id="tip" class="tip" hidden></div>
+
+<script>
+"use strict";
+const view = document.getElementById("view");
+const CAT = {value_add: "Value-add", necessary_nva: "Necessary non-value-add", waste: "Waste"};
+const CAT_SHORT = {value_add: "Value-add", necessary_nva: "Necessary NVA", waste: "Waste"};
+const CATS = ["value_add", "necessary_nva", "waste"];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const secs = s => (Math.round(s * 100) / 100).toString();
+const f1 = s => (Math.round(s * 10) / 10).toFixed(1);
+const mmss = s => { s = Math.max(0, Math.round(s)); return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`; };
+const SPARK = '<svg class="spark"><use href="#spark"/></svg>';
+const ICON = {
+  loop: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg>',
+  prev: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11 6v12l-8.5-6zM21 6v12l-8.5-6z"/></svg>',
+  next: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 6v12l8.5-6zM3 6v12l8.5-6z"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>',
+  send: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 20.5V14l9-2-9-2V3.5L22 12z"/></svg>',
+  up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>',
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  cam: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="3"/><path d="M16 10l6-3v10l-6-3z"/></svg>',
+  clip: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-8.6 8.6a5 5 0 0 1-7-7L14 4a3.3 3.3 0 0 1 4.7 4.7L10 17.4a1.7 1.7 0 0 1-2.4-2.4L15.5 7"/></svg>',
+  copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+  dl: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>',
+};
+const TABICON = {
+  instructions: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"/></svg>',
+  time: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6"/></svg>',
+  kaizen: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>',
+  copilot: '<svg viewBox="0 0 24 24"><use href="#spark"/></svg>',
+  chart: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="9" r="2.5"/><circle cx="9" cy="18" r="2.5"/><path d="M8.3 7.2l7.4 1.2M16.6 11l-5.8 5.3"/></svg>',
+  template: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg>',
+  observation: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>',
+  breakdown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg>',
+  line: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 21V10M10 21V4M15 21v-8M20 21V7"/></svg>',
+};
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, opts);
+  if (r.status === 401 && CFG.auth && !path.startsWith("/api/auth/")) { renderAuth(); throw new Error("Please sign in."); }
+  if (!r.ok) {
+    let msg = `${r.status} ${r.statusText}`;
+    try { const j = await r.json(); if (j.detail) msg = typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail); } catch {}
+    throw new Error(msg);
+  }
+  return r;
+}
+const jsonBody = (method, body) => ({method, headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.hidden = true, 3800);
+}
+const tip = document.getElementById("tip");
+function bindTips(root) {
+  root.querySelectorAll("[data-tip]").forEach(el => {
+    el.onmousemove = e => { tip.innerHTML = el.dataset.tip; tip.hidden = false; tip.style.left = Math.min(e.clientX + 14, innerWidth - 290) + "px"; tip.style.top = (e.clientY + 14) + "px"; };
+    el.onmouseleave = () => tip.hidden = true;
+  });
+}
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+
+/* small, safe markdown for copilot answers: escape first, then format */
+function md(src) {
+  const inline = s => s.replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>")
+    .replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g, "$1<i>$2</i>").replace(/(^|\W)_([^_\n]+)_(?!\w)/g, "$1<i>$2</i>");
+  const lines = esc(src).split("\n"); let out = "", i = 0;
+  const cells = l => l.trim().replace(/^\||\|$/g, "").split("|").map(c => inline(c.trim()));
+  while (i < lines.length) {
+    const l = lines[i];
+    if (/^\s*\|.*\|\s*$/.test(l) && i + 1 < lines.length && /^\s*\|?[\s:-]+(\|[\s:-]+)+\|?\s*$/.test(lines[i + 1])) {
+      out += `<table><thead><tr>${cells(l).map(c => `<th>${c}</th>`).join("")}</tr></thead><tbody>`; i += 2;
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) { out += `<tr>${cells(lines[i]).map(c => `<td>${c}</td>`).join("")}</tr>`; i++; }
+      out += "</tbody></table>"; continue;
+    }
+    let m;
+    if ((m = l.match(/^(#{1,4})\s+(.*)$/))) { const n = Math.min(3, m[1].length); out += `<h${n}>${inline(m[2])}</h${n}>`; i++; continue; }
+    if (/^\s*([-*•]|\d+[.)])\s+/.test(l)) {
+      const ordered = /^\s*\d+[.)]/.test(l); out += ordered ? "<ol>" : "<ul>";
+      while (i < lines.length && /^\s*([-*•]|\d+[.)])\s+/.test(lines[i])) { out += `<li>${inline(lines[i].replace(/^\s*([-*•]|\d+[.)])\s+/, ""))}</li>`; i++; }
+      out += ordered ? "</ol>" : "</ul>"; continue;
+    }
+    if (!l.trim()) { i++; continue; }
+    let p = [];
+    while (i < lines.length && lines[i].trim() && !/^(#{1,4}\s|\s*([-*•]|\d+[.)])\s+|\s*\|)/.test(lines[i])) { p.push(inline(lines[i])); i++; }
+    if (p.length) out += `<p>${p.join("<br>")}</p>`; else { out += `<p>${inline(l)}</p>`; i++; }
+  }
+  return out;
+}
+
+/* ------------------------------------------------------------ shell */
+let pollTimer = null, sideTimer = null, S = null, dirty = false, vid = null, editing = false, curTab = "instructions";
+let curCycle = 1, curStepId = null, CFG = {sheet_decimals: 0};
+const side = document.getElementById("side");
+for (const [id, cls, key] of [["bigText", "big", "ap.big"], ["hiCon", "hc", "ap.hc"]]) {
+  const b = document.getElementById(id), on0 = store.get(key, false);
+  document.documentElement.classList.toggle(cls, on0); b.setAttribute("aria-pressed", on0);
+  b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); document.documentElement.classList.toggle(cls, on); store.set(key, on); };
+}
+document.getElementById("menu").onclick = () => side.classList.toggle("open");
+window.addEventListener("beforeunload", e => { if (dirty) { e.preventDefault(); e.returnValue = ""; } });
+window.addEventListener("hashchange", route);
+
+async function refreshSidebar() {
+  clearTimeout(sideTimer);
+  try {
+    const rows = await (await api("/api/studies")).json();
+    const el = document.getElementById("recent");
+    el.innerHTML = rows.length ? rows.slice(0, 30).map(r => `<a href="#/study/${r.id}" data-id="${r.id}" title="${esc(studyName(r))}"><span class="dot ${esc(r.status)}"></span>${esc(studyName(r))}</a>`).join("")
+      : `<span class="muted" style="padding:8px 14px;font-size:.85rem">No lessons yet</span>`;
+    markNav();
+    if (rows.some(r => r.status === "processing")) sideTimer = setTimeout(refreshSidebar, 5000);
+  } catch {}
+}
+const studyName = r => { const h = r.header || {}; return `${h.job || h.project || h.line || "Untitled lesson"}${r.number != null ? ` · ${r.number}` : ""}`; };
+function markNav() {
+  const r = parseHash();
+  const ln = document.querySelector('[data-nav="line"]'); if (ln) ln.hidden = !FULL();
+  document.querySelectorAll("[data-nav]").forEach(a => { if (a.dataset.nav === r.page) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+  document.querySelectorAll("#recent a").forEach(a => { if (r.page === "study" && a.dataset.id === r.id) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current"); });
+}
+function parseHash() {
+  const m = location.hash.match(/^#\/study\/([a-f0-9]{32})(?:\/(instructions|time|kaizen|copilot|chart|breakdown|observation|template))?$/);
+  if (m) return {page: "study", id: m[1], tab: m[2] || defaultTab()};
+  if (location.hash === "#/line") return {page: "line"};
+  return {page: "home"};
+}
+function route() {
+  clearTimeout(pollTimer); tip.hidden = true; side.classList.remove("open");
+  const r = parseHash();
+  if (r.page === "study" && S && S.id === r.id && S.status === "ready") { markNav(); switchTab(r.tab); return; }
+  if ((dirty || tplDirty) && S && !confirm("Leave without saving your changes?")) { history.replaceState(null, "", `#/study/${S.id}/${curTab}`); return; }
+  tplDirty = false;
+  dirty = false; S = null; vid = null; editing = false; stopCamera();
+  markNav();
+  if (r.page === "study") { curTab = r.tab; openStudy(r.id); }
+  else if (r.page === "line") showLine();
+  else showHome();
+}
+
+/* ------------------------------------------------------------ home */
+const FEATURES_LEARN = [
+  ["instructions", "Watch one step at a time", "Each step plays on a loop, as slowly as you need (down to quarter speed). Next and back with the arrow keys."],
+  ["observation", "Words, not sound", "What the hands do, written out moment by moment and shown as captions on the video. Nothing depends on hearing."],
+  ["chart", "See where it happens", "A map of the workspace with every step numbered at its spot, and arrows for where to move next."],
+  ["copilot", "Ask by typing", "Type a question about the task in your own words. Answers come only from this lesson."],
+];
+async function showHome() {
+  view.innerHTML = `
+  <div class="home">
+    <p class="kicker">For Deaf, hard-of-hearing and non-speaking workers</p>
+    <h1 class="hello">Learn any task from one video.</h1>
+    <div class="hello-sub">Film someone doing the job once. Every step is split out, shown on a loop, written in plain words and placed on a map of the workspace. No audio, no interpreter, no guessing.</div>
+    <form class="composer" id="up">
+      <div class="drop" id="drop" tabindex="0" role="button" aria-label="Choose a video of the task">
+        <b id="dropText">Drop a video of the task here, or choose one</b>
+        <div class="muted" style="font-size:.9rem;margin-top:4px">MP4, MOV, AVI or WebM. Film the whole task from start to finish; a phone is fine.</div>
+        <input type="file" id="file" accept="video/*" hidden>
+      </div>
+      <video class="rec-prev" id="recPrev" muted playsinline hidden></video>
+      <div class="comp-row">
+        <button type="button" class="btn text" id="pickBtn">${ICON.clip}Upload</button>
+        <button type="button" class="btn text" id="recBtn">${ICON.cam}Record</button>
+        <span class="muted" id="recState" style="font-size:.9rem"></span>
+        <span class="grow"></span>
+        <button class="go" id="go" type="submit" disabled aria-label="Make the lesson" title="Make the lesson">${ICON.send}</button>
+      </div>
+      <div class="grid2">
+        <label class="f">What is the task?<input type="text" name="job" placeholder="e.g. Install the handle"></label>
+        <label class="f">Where is it done? (optional)<input type="text" name="line" placeholder="e.g. Line 3, station 4"></label>
+      </div>
+      <input type="hidden" name="date" value="${new Date().toISOString().slice(0, 10)}">
+      <progress id="prog" value="0" max="100" hidden></progress>
+      <p id="upErr" class="err" role="alert" style="margin:6px 0 0"></p>
+    </form>
+    <div class="features">${FEATURES_LEARN.map(([k, t, d]) => `<div class="feat"><div class="ic">${TABICON[k]}</div><b>${t}</b><span>${d}</span></div>`).join("")}</div>
+    <section aria-labelledby="lessonsH"><h2 id="lessonsH" class="sec-title">Your lessons</h2><div id="list" class="lessons muted">Loading…</div></section>
+  </div>`;
+  const drop = document.getElementById("drop"), file = document.getElementById("file"), go = document.getElementById("go");
+  let chosen = null;
+  const pick = f => { chosen = f; document.getElementById("dropText").textContent = f ? f.name : "Drop a video of the task here, or choose one"; go.disabled = !f; };
+  drop.onclick = () => file.click();
+  document.getElementById("pickBtn").onclick = () => file.click();
+  drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); file.click(); } };
+  file.onchange = () => pick(file.files[0] || null);
+  drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); pick(e.dataTransfer.files[0] || null); };
+  setupRecorder(pick);
+  document.getElementById("up").onsubmit = e => {
+    e.preventDefault();
+    if (!chosen) return;
+    const fd = new FormData(e.target);
+    const prog = document.getElementById("prog"), err = document.getElementById("upErr");
+    err.textContent = ""; prog.hidden = false; prog.value = 0; go.disabled = true;
+    const fail = msg => { err.textContent = msg; prog.hidden = true; go.disabled = false; };
+    // chunked upload: each piece is a small request, retried a few times, so large videos get
+    // through proxies and flaky connections
+    const putChunk = (uid, offset, blob) => new Promise((ok, no) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("PUT", `/api/uploads/${uid}?offset=${offset}`);
+      xhr.upload.onprogress = ev => { if (ev.lengthComputable) prog.value = (offset + ev.loaded) / chosen.size * 100; };
+      xhr.onload = () => { let j = {}; try { j = JSON.parse(xhr.responseText); } catch {}
+        if (xhr.status === 200 || xhr.status === 409) ok(j.received); else no(new Error(j.detail || `Upload failed (${xhr.status}).`)); };
+      xhr.onerror = () => no(new Error("network"));
+      xhr.send(blob);
+    });
+    (async () => {
+      try {
+        const st = await (await api("/api/uploads", jsonBody("POST", {filename: chosen.name || "video.webm", size: chosen.size}))).json();
+        let off = 0, tries = 0;
+        while (off < chosen.size) {
+          try { off = await putChunk(st.upload_id, off, chosen.slice(off, off + st.chunk)); tries = 0; }
+          catch (x) { if (x.message !== "network" || ++tries > 4) throw x.message === "network" ? new Error("Upload failed: the connection dropped.") : x; await new Promise(r => setTimeout(r, 1500 * tries)); }
+        }
+        fd.append("upload_id", st.upload_id); fd.append("filename", chosen.name || "video.webm");
+        const j = await (await api("/api/studies", {method: "POST", body: fd})).json();
+        refreshSidebar(); location.hash = `#/study/${j.id}`;
+      } catch (x) { fail(x.message || "Upload failed."); }
+    })();
+  };
+  try {
+    const rows = await (await api("/api/studies")).json();
+    const list = document.getElementById("list");
+    if (!list) return;
+    if (!rows.length) { list.textContent = "No lessons yet. Add a video above to make the first one."; return; }
+    list.classList.remove("muted");
+    const st = s => ({ready: "Ready to learn", processing: "Being prepared…", failed: "Could not prepare"}[s] || s);
+    list.innerHTML = rows.map(r => `<a class="lesson" href="#/study/${r.id}">
+      <span class="lesson-ic">${TABICON.instructions}</span>
+      <span class="lesson-b"><b>${esc(r.header.job || r.header.project || "Untitled lesson")}</b>
+        <span class="muted">${[r.header.line, r.header.date].filter(Boolean).map(esc).join(" · ")}</span></span>
+      <span class="chip"><span class="dot ${esc(r.status)}" style="width:8px;height:8px;border-radius:50%"></span>${st(r.status)}</span></a>`).join("");
+  } catch (e) { const l = document.getElementById("list"); if (l) l.textContent = `Could not load lessons: ${e.message}`; }
+}
+
+let recStream = null;
+function stopCamera() { if (recStream) { recStream.getTracks().forEach(t => t.stop()); recStream = null; } }
+function setupRecorder(pick) {
+  const btn = document.getElementById("recBtn"), state = document.getElementById("recState"), prev = document.getElementById("recPrev");
+  if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) { btn.disabled = true; btn.title = "Camera recording needs localhost or https"; return; }
+  let rec = null, chunks = [], t0 = 0, tick = null;
+  btn.onclick = async () => {
+    if (rec) { rec.stop(); return; }
+    try { recStream = await navigator.mediaDevices.getUserMedia({audio: false, video: {width: {ideal: 1920}, height: {ideal: 1080}, facingMode: "environment"}}); }
+    catch (e) { state.textContent = `Camera not available: ${e.message}`; return; }
+    prev.srcObject = recStream; prev.hidden = false; prev.play();
+    const type = ["video/webm;codecs=vp9", "video/webm", "video/mp4"].find(t => MediaRecorder.isTypeSupported(t)) || "";
+    rec = new MediaRecorder(recStream, type ? {mimeType: type} : {}); chunks = [];
+    rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    rec.onstop = () => {
+      clearInterval(tick); stopCamera(); prev.hidden = true; prev.srcObject = null;
+      const mime = rec.mimeType || "video/webm", ext = mime.includes("mp4") ? "mp4" : "webm";
+      const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+      pick(new File(chunks, `recording-${stamp}.${ext}`, {type: mime}));
+      state.textContent = `Recorded ${Math.round((Date.now() - t0) / 1000)} s`;
+      btn.innerHTML = `${ICON.cam}Record again`; rec = null;
+    };
+    rec.start(1000); t0 = Date.now(); btn.innerHTML = `${ICON.cam}Stop`;
+    tick = setInterval(() => { state.innerHTML = `<span class="recdot"></span>Recording ${Math.round((Date.now() - t0) / 1000)} s`; }, 250);
+  };
+}
+
+/* ------------------------------------------------------------ study */
+async function openStudy(id) {
+  try { S = await (await api(`/api/studies/${id}`)).json(); }
+  catch (e) { view.innerHTML = `<div class="status"><p class="err">${esc(e.message)}</p><a href="#/">Back home</a></div>`; return; }
+  if (S.status === "processing") {
+    view.innerHTML = `<div class="status">${SPARK}<h2 style="font-weight:600">Preparing your lesson</h2><p class="muted">${esc(S.progress || "Working")}</p><p class="muted">Splitting the video into steps and writing each one out. This takes a few minutes; you can leave this page.</p></div>`;
+    pollTimer = setTimeout(() => { if (parseHash().id === id) openStudy(id); }, 3000); return;
+  }
+  refreshSidebar();
+  if (S.status === "failed") {
+    view.innerHTML = `<div class="status"><h2 style="font-weight:600">This lesson could not be prepared</h2><p class="err">${esc(S.error)}</p><p><button class="btn primary" id="retry">Try again</button> <a class="btn text" href="#/">Back home</a></p></div>`;
+    document.getElementById("retry").onclick = async () => { try { await api(`/api/studies/${id}/reanalyze`, {method: "POST"}); openStudy(id); } catch (e) { toast(e.message); } };
+    return;
+  }
+  S.actions = S.actions || []; S.kaizen_ideas = S.kaizen_ideas || []; S.copilot = S.copilot || [];
+  curCycle = S.representative_cycle;
+  const first = cycleSteps()[0]; curStepId = first ? first.id : null;
+  await loadTemplate();
+  renderStudyShell();
+}
+
+const cycleOf = i => S.cycles.find(c => c.index === i);
+const cycleSteps = (i = curCycle) => S.steps.filter(s => s.cycle === i).sort((a, b) => a.start - b.start);
+const repSteps = () => cycleSteps(S.representative_cycle);
+const curStep = () => S.steps.find(s => s.id === curStepId) || null;
+const newId = p => `${p}${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
+function markDirty() { dirty = true; renderBar(); }
+
+const FULL = () => CFG.ui === "full";
+const defaultTab = () => "instructions";
+const tabsFor = () => [["instructions", "Learn step by step"], ["breakdown", "All steps"], ["chart", "Where it happens"], ["copilot", "Ask"], ["template", "Station template"]];
+function renderStudyShell() {
+  const h = S.header || {};
+  document.getElementById("teachFab").hidden = !STPL;
+  const n = repSteps().length;
+  view.innerHTML = `
+  <div class="study-top">
+    <div class="title">
+      <div class="eyebrow">Lesson · ${n} step${n === 1 ? "" : "s"}${h.line ? ` · ${esc(h.line)}` : ""}</div>
+      <h1>${esc(h.job || h.project || "Untitled lesson")}</h1>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Lesson views">${tabsFor().map(([k, t]) => `<a role="tab" href="#/study/${S.id}/${k}" data-tab="${k}">${TABICON[k]}${t}</a>`).join("")}</nav>
+    <div class="bar-actions" id="barActions"></div>
+  </div>
+  <div id="detailsPanel" hidden></div>
+  <div id="tabBody"></div>`;
+  switchTab(curTab);
+}
+window.addEventListener("hashchange", () => { if (!location.hash.startsWith("#/study/")) { document.getElementById("teachFab").hidden = true; closeTeach(); } });
+function switchTab(tab) {
+  if (!tabsFor().some(([k]) => k === tab)) tab = defaultTab();
+  if (tab !== "template") calMode = false;
+  if (tab !== "breakdown") timeEdit = false;
+  if (tab !== "chart") chartEdit = false;
+  curTab = tab; vid = null; tip.hidden = true;
+  document.getElementById("teachFab").hidden = !STPL || tab === "copilot";
+  document.querySelectorAll("[data-tab]").forEach(a => a.setAttribute("aria-selected", a.dataset.tab === tab));
+  renderBar();
+  ({instructions: renderInstructions, time: renderTimeStudy, kaizen: renderKaizen, copilot: renderCopilot,
+    chart: renderChartTab, breakdown: renderBreakdown, observation: renderObservation, template: renderTemplateTab})[tab]();
+}
+function renderBar() {
+  const el = document.getElementById("barActions"); if (!el) return;
+  el.innerHTML = `
+    ${curTab === "instructions" ? `<button class="btn" id="editBtn">${editing ? "Done correcting" : "Correct steps"}</button>` : ""}
+    <button class="btn" id="expInstr">${ICON.dl}Step guide to keep</button>
+    <button class="btn" id="expChart">${ICON.dl}Workspace map (PDF)</button>
+    ${dirty ? `<button class="btn primary" id="save">Save changes</button>` : ""}`;
+  const eb = document.getElementById("editBtn");
+  if (eb) eb.onclick = () => { editing = !editing; renderBar(); renderAll(false); };
+  document.getElementById("expChart").onclick = () => download(`/api/studies/${S.id}/chart.pdf`, "Drawing the workspace map");
+  document.getElementById("expInstr").onclick = () => download(`/api/studies/${S.id}/export/instructions?cycle=${S.representative_cycle}`, "Building the step guide");
+  const sv = document.getElementById("save"); if (sv) sv.onclick = save;
+}
+
+/* ------------------------------------------------------------ tab: instructions */
+function renderInstructions() {
+  document.getElementById("tabBody").innerHTML = `
+  <div class="layout">
+    <section class="pane" aria-label="Steps">
+      <div class="steps-head"><span>Steps</span><span class="muted" id="stepCount"></span></div>
+      <div class="cycle-pick" id="cyclePick"></div>
+      <ul class="steps" id="steps" role="listbox" aria-label="Steps"></ul>
+    </section>
+    <section class="center">
+      <div class="step-no" id="stepNo"></div>
+      <h2 id="stepTitle" aria-live="polite"></h2>
+      <div class="player">
+        <div class="vwrap">
+          <video id="vid" src="/api/studies/${S.id}/video" preload="auto" muted playsinline aria-describedby="cap"></video>
+        </div>
+        <div class="cap" id="cap" aria-live="off"></div>
+        <div class="ctrl">
+          <div class="ctrl-row">
+            <span id="tCur">00:00</span>
+            <button class="icon" id="loopBtn" aria-pressed="true" title="Repeat this step" aria-label="Repeat this step">${ICON.loop}</button>
+            <button class="icon cc" id="ccBtn" aria-pressed="true" title="Captions on the video" aria-label="Captions on the video">CC</button>
+            <span class="grow"></span>
+            <button class="icon" id="prevBtn" title="Previous step" aria-label="Previous step">${ICON.prev}</button>
+            <button class="icon play" id="playBtn" title="Play" aria-label="Play">${ICON.play}</button>
+            <button class="icon" id="nextBtn" title="Next step" aria-label="Next step">${ICON.next}</button>
+            <span class="grow"></span>
+            <label class="speed">Speed <select id="speed">${[0.25, 0.5, 0.75, 1].map(v => `<option value="${v}" ${v === store.get("ap.speed", 0.75) ? "selected" : ""}>${v === 1 ? "Normal" : v + "×"}</option>`).join("")}</select></label>
+            <span id="tDur">00:00</span>
+          </div>
+          <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Position in the video">
+        </div>
+      </div>
+      <p class="keys muted">Keyboard: <kbd>Space</kbd> play or pause · <kbd>↓</kbd> next step · <kbd>↑</kbd> previous step · <kbd>←</kbd> <kbd>→</kbd> frame by frame</p>
+      <div id="editTools"></div>
+    </section>
+    <section class="pane right" id="right" aria-label="Details"></section>
+  </div>`;
+  vid = document.getElementById("vid");
+  const scrub = document.getElementById("scrub");
+  let scrubbing = false;
+  scrub.addEventListener("input", () => { scrubbing = true; if (vid.duration) vid.currentTime = scrub.value / 1000 * vid.duration; });
+  scrub.addEventListener("change", () => { scrubbing = false; const s = stepAt(vid.currentTime); if (s && s.id !== curStepId) { curStepId = s.id; renderAll(false); } });
+  vid.addEventListener("loadedmetadata", () => document.getElementById("tDur").textContent = mmss(vid.duration));
+  vid.addEventListener("timeupdate", () => {
+    if (!vid || !document.getElementById("tCur")) return;
+    document.getElementById("tCur").textContent = mmss(vid.currentTime);
+    if (!scrubbing && vid.duration) scrub.value = vid.currentTime / vid.duration * 1000;
+    onTime();
+  });
+  const playBtn = document.getElementById("playBtn");
+  vid.addEventListener("play", () => { playBtn.innerHTML = ICON.pause; playBtn.title = playBtn.ariaLabel = "Pause"; });
+  vid.addEventListener("pause", () => { playBtn.innerHTML = ICON.play; playBtn.title = playBtn.ariaLabel = "Play"; });
+  playBtn.onclick = () => vid.paused ? vid.play().catch(() => {}) : vid.pause();
+  document.getElementById("prevBtn").onclick = () => stepBy(-1);
+  document.getElementById("nextBtn").onclick = () => stepBy(1);
+  document.getElementById("speed").onchange = e => { vid.playbackRate = +e.target.value; store.set("ap.speed", +e.target.value); };
+  vid.addEventListener("loadedmetadata", () => { vid.playbackRate = store.get("ap.speed", 0.75); });
+  const ccBtn = document.getElementById("ccBtn");
+  ccBtn.setAttribute("aria-pressed", store.get("ap.cc", true));
+  ccBtn.onclick = () => { const on = ccBtn.getAttribute("aria-pressed") !== "true"; ccBtn.setAttribute("aria-pressed", on); store.set("ap.cc", on); updateCaption(); };
+  const loopBtn = document.getElementById("loopBtn");
+  loopBtn.onclick = () => loopBtn.setAttribute("aria-pressed", loopBtn.getAttribute("aria-pressed") !== "true");
+  renderAll(true);
+}
+
+function renderAll(seek) {
+  if (curTab !== "instructions" || !document.getElementById("steps")) return;
+  const list = cycleSteps(), s = curStep();
+  document.getElementById("stepCount").textContent = s ? `${list.indexOf(s) + 1} of ${list.length}` : `${list.length}`;
+  document.getElementById("stepNo").textContent = s ? `Step ${list.indexOf(s) + 1} of ${list.length}` : "";
+  document.getElementById("stepTitle").textContent = s ? s.title : "No steps here yet";
+  renderCyclePick(); renderSteps(); renderRight(); renderEditTools();
+  if (seek && s && vid) vid.currentTime = s.start;
+}
+function selectStep(id, seek = true, play = false) { curStepId = id; renderAll(seek); if (play && vid) vid.play().catch(() => {}); }
+function stepBy(d) {
+  const list = cycleSteps(), i = list.findIndex(s => s.id === curStepId), n = list[i + d];
+  if (n) selectStep(n.id, true, vid && !vid.paused);
+}
+function renderCyclePick() {
+  const el = document.getElementById("cyclePick");
+  if (S.cycles.length < 2 && !editing) { el.innerHTML = ""; return; }
+  el.innerHTML = `<label class="speed" style="width:100%">Watch <select id="cycleSel" aria-label="Which time the task is shown" style="flex:1">${S.cycles.map(c => `<option value="${c.index}" ${c.index === curCycle ? "selected" : ""}>${c.index === S.representative_cycle ? "Best example" : `Time ${c.index}`} (${mmss(c.end - c.start)})</option>`).join("")}</select></label>`;
+  document.getElementById("cycleSel").onchange = e => { curCycle = +e.target.value; const f = cycleSteps()[0]; selectStep(f ? f.id : null); };
+}
+function renderSteps() {
+  const ul = document.getElementById("steps");
+  ul.innerHTML = cycleSteps().map((s, i) => `
+    <li class="step" role="option" data-id="${s.id}" aria-selected="${s.id === curStepId}">
+      <span class="n">${i + 1}</span><div class="st-title">${esc(s.title)}</div>
+      <div class="st-meta"><span>${f1(s.end - s.start)} s</span><span>${{L: "Left hand", R: "Right hand", both: "Both hands"}[s.hand] || ""}</span>${s.confidence === "low" ? '<span class="unclear">Unclear in video</span>' : ""}</div>
+    </li>`).join("");
+  ul.querySelectorAll(".step").forEach(li => li.onclick = () => selectStep(li.dataset.id, true, true));
+  const selEl = ul.querySelector('[aria-selected="true"]'); if (selEl) selEl.scrollIntoView({block: "nearest"});
+}
+const SECTIONS = [["key_points", "Watch out for", "Nothing special"], ["materials", "Parts you need", "None"], ["tools", "Tools you need", "None"]];
+function renderRight() {
+  const el = document.getElementById("right"), s = curStep(), c = cycleOf(curCycle);
+  let html = "";
+  if (editing && s) {
+    html += `
+    <div class="edit-block">
+      <h3>Step</h3>
+      <label class="f">Step name<textarea id="f_title">${esc(s.title)}</textarea></label>
+      <label class="f">Starts when<input type="text" id="f_breakpoint" value="${esc(s.breakpoint || "")}"></label>
+      <label class="f">Hand<select id="f_hand">${["R", "L", "both"].map(h => `<option ${h === s.hand ? "selected" : ""}>${h}</option>`).join("")}</select></label>
+      <label class="f">Plain explanation<textarea id="f_description">${esc(s.description)}</textarea></label>
+      <label class="check"><input type="checkbox" id="f_ok" ${s.confidence !== "low" ? "checked" : ""}> Clear in the video (untick to warn learners)</label>
+    </div>
+    <div class="edit-block">
+      <h3>This recording of the task</h3>
+      <label class="check"><input type="checkbox" id="abn" ${c.abnormal ? "checked" : ""}> Something went wrong in this one</label>
+      <label class="f">Note<textarea id="cnote">${esc(c.note)}</textarea></label>
+      <button class="btn" id="repBtn" ${c.index === S.representative_cycle ? "disabled" : ""}>${c.index === S.representative_cycle ? "Shown as the best example" : "Use as the best example"}</button>
+    </div>`;
+  } else if (s) {
+    html += `<div class="sec explain">
+      ${s.description ? `<p class="plain">${esc(s.description)}</p>` : `<p class="plain">${esc(s.title)}.</p>`}
+      <div class="facts">
+        <span><b>Hands</b>${{L: "Left hand", R: "Right hand", both: "Both hands"}[s.hand] || esc(s.hand)}</span>
+        <span><b>Takes about</b>${f1(s.end - s.start)} seconds</span>
+        ${s.breakpoint ? `<span><b>Starts when</b>${esc(s.breakpoint)}</span>` : ""}
+      </div>
+      ${s.confidence === "low" ? `<div class="warnbox" style="margin-top:8px">This step is hard to see in the video. Watch it slowly, or ask someone to show you.</div>` : ""}
+    </div>`;
+  }
+  html += transcriptSection(s);
+  for (const [key, title, emptyText] of SECTIONS) {
+    const items = s ? s[key] : [];
+    const body = editing && s
+      ? `<textarea id="l_${key}" aria-label="${title}, one per line" placeholder="One per line">${esc(items.join("\n"))}</textarea>`
+      : items.length ? `<ul>${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="empty">${emptyText}</div>`;
+    html += `<div class="sec"><div class="sec-h">${title}</div><div class="sec-b">${body}</div></div>`;
+  }
+  el.innerHTML = html;
+  const trBtn = el.querySelector("#trBtn"); if (trBtn) trBtn.onclick = () => transcribeCycle(trBtn);
+  el.querySelectorAll(".tr li").forEach(li => li.onclick = () => { vid.currentTime = +li.dataset.t; vid.play().catch(() => {}); });
+  highlightLine();
+  if (!(editing && s)) return;
+  el.querySelector("#l_transcript").oninput = e => { s.transcript = parseTranscript(e.target.value, s); s.edited = true; markDirty(); };
+  for (const f of ["title", "breakpoint", "hand", "description"]) {
+    el.querySelector(`#f_${f}`).addEventListener(f === "category" || f === "hand" ? "change" : "input", e => {
+      s[f] = e.target.value; s.edited = true; markDirty();
+      if (f === "title") document.getElementById("stepTitle").textContent = s.title;
+      if (f === "title" || f === "category") { renderSteps(); renderEditTools(); }
+    });
+  }
+  el.querySelector("#f_ok").onchange = e => { s.confidence = e.target.checked ? "high" : "low"; s.edited = true; markDirty(); renderSteps(); };
+  for (const [key] of SECTIONS) el.querySelector(`#l_${key}`).oninput = e => { s[key] = e.target.value.split("\n").map(x => x.trim()).filter(Boolean); s.edited = true; markDirty(); };
+  el.querySelector("#abn").onchange = e => { c.abnormal = e.target.checked; markDirty(); renderCyclePick(); };
+  el.querySelector("#cnote").oninput = e => { c.note = e.target.value; markDirty(); };
+  el.querySelector("#repBtn").onclick = () => { S.representative_cycle = c.index; markDirty(); renderCyclePick(); renderRight(); };
+}
+function renderEditTools() {
+  const el = document.getElementById("editTools");
+  if (!editing) { el.innerHTML = ""; return; }
+  const c = cycleOf(curCycle), span = c.end - c.start;
+  el.innerHTML = `
+    <div class="timeline" id="tl" aria-label="Cycle timeline">${cycleSteps().map((s, i) =>
+      `<div class="seg ${s.category}${s.id === curStepId ? " sel" : ""}" style="left:${(s.start - c.start) / span * 100}%;width:${(s.end - s.start) / span * 100}%" title="${i + 1}. ${esc(s.title)}">${i + 1}</div>`).join("")}<div class="playhead" id="ph"></div></div>
+    <div class="edit-tools">
+      <button class="btn" id="setStart">Start here</button>
+      <button class="btn" id="setEnd">End here</button>
+      <button class="btn" id="split">Split here</button>
+      <button class="btn" id="merge">Merge with next</button>
+      <button class="btn" id="del">Delete step</button>
+    </div>`;
+  document.getElementById("tl").onclick = e => {
+    const r = e.currentTarget.getBoundingClientRect();
+    vid.currentTime = c.start + (e.clientX - r.left) / r.width * span;
+    const s = stepAt(vid.currentTime); if (s) { curStepId = s.id; renderAll(false); }
+  };
+  document.getElementById("setStart").onclick = () => setStart(curStep(), vid.currentTime);
+  document.getElementById("setEnd").onclick = setEndHere;
+  document.getElementById("split").onclick = split;
+  document.getElementById("merge").onclick = merge;
+  document.getElementById("del").onclick = removeStep;
+  movePlayhead();
+}
+function movePlayhead() {
+  const ph = document.getElementById("ph"); if (!ph || !vid) return;
+  const c = cycleOf(curCycle), p = (vid.currentTime - c.start) / (c.end - c.start);
+  ph.style.left = `${Math.max(0, Math.min(1, p)) * 100}%`; ph.hidden = p < 0 || p > 1;
+}
+
+/* transcript */
+const rel = (t, s) => `+${Math.max(0, t - s.start).toFixed(1)} s`;
+function transcriptSection(s) {
+  let body;
+  if (!s) body = `<div class="empty">Select a step.</div>`;
+  else if (editing) {
+    body = `<textarea id="l_transcript" rows="8" aria-label="Transcript, one action per line" placeholder="1.5 Right hand picks the fitting from the bin">${esc((s.transcript || []).map(l => `${Math.max(0, l.t - s.start).toFixed(1)} ${l.text}`).join("\n"))}</textarea>
+      <div class="muted" style="font-size:.8rem;margin-top:4px">One action per line, starting with seconds from the step start.</div>`;
+  } else if (s.transcript && s.transcript.length) {
+    body = `<ol class="tr">${s.transcript.map(l => `<li data-t="${l.t}"><span class="ts">${rel(l.t, s)}</span><span>${esc(l.text)}</span></li>`).join("")}</ol>`;
+  } else {
+    const any = cycleSteps().some(x => x.transcript && x.transcript.length);
+    body = any ? `<div class="empty">None for this step.</div>`
+               : `<div class="empty">Not written out yet.</div><button class="btn tonal" id="trBtn" style="margin-top:8px;align-self:flex-start">${TABICON.copilot.replace("<svg", '<svg width="16" height="16"')}Write out what the hands do</button>`;
+  }
+  return `<div class="sec"><div class="sec-h">What the hands do <span class="muted" style="font-weight:500">· tap a line to see it</span></div><div class="sec-b">${body}</div></div>`;
+}
+function parseTranscript(text, s) {
+  const out = [];
+  for (const raw of text.split("\n")) {
+    const line = raw.trim(); if (!line) continue;
+    const m = line.match(/^\+?(\d+(?:\.\d+)?)\s*s?\s+(.+)$/);
+    const off = m ? +m[1] : (out.length ? out[out.length - 1].t - s.start : 0);
+    out.push({t: Math.round(Math.min(s.start + off, s.end) * 100) / 100, text: m ? m[2].trim() : line});
+  }
+  return out.sort((a, b) => a.t - b.t);
+}
+function highlightLine() {
+  const items = [...document.querySelectorAll(".tr li")]; if (!items.length || !vid) return;
+  let cur = null;
+  for (const li of items) if (+li.dataset.t <= vid.currentTime + 0.05) cur = li;
+  items.forEach(li => li.setAttribute("aria-current", li === cur));
+}
+async function transcribeCycle(btn) {
+  if (dirty && !(await save())) return;
+  btn.disabled = true; btn.textContent = "Writing it out…";
+  try {
+    const fresh = await (await api(`/api/studies/${S.id}/transcribe?cycle=${curCycle}`, {method: "POST"})).json();
+    Object.assign(S, fresh); renderAll(false); toast("Written out");
+  } catch (e) { btn.disabled = false; btn.textContent = "Write out what the hands do"; toast(`Could not write it out: ${e.message}`); }
+}
+
+/* playback */
+function stepAt(t) { return cycleSteps().find(s => t >= s.start && t < s.end) || null; }
+function updateCaption() {
+  const cap = document.getElementById("cap"); if (!cap || !vid) return;
+  const on = document.getElementById("ccBtn")?.getAttribute("aria-pressed") === "true";
+  const s = stepAt(vid.currentTime) || curStep();
+  let line = null;
+  for (const l of (s?.transcript || [])) if (l.t <= vid.currentTime + 0.05) line = l;
+  const text = on && line ? line.text : "";
+  if (cap.textContent !== text) cap.textContent = text;
+  cap.hidden = !on;
+}
+function onTime() {
+  movePlayhead(); highlightLine(); updateCaption();
+  const s = curStep(); if (!s || vid.paused) return;
+  if (document.getElementById("loopBtn").getAttribute("aria-pressed") === "true") {
+    if (vid.currentTime >= s.end - 0.03 || vid.currentTime < s.start - 0.3) vid.currentTime = s.start;
+  } else {
+    const at = stepAt(vid.currentTime);
+    if (at && at.id !== curStepId) { curStepId = at.id; renderAll(false); }
+  }
+}
+document.addEventListener("keydown", e => {
+  if (!vid || curTab !== "instructions" || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  if (e.key === " ") { e.preventDefault(); vid.paused ? vid.play().catch(() => {}) : vid.pause(); }
+  if (e.key === "ArrowDown") { e.preventDefault(); stepBy(1); }
+  if (e.key === "ArrowUp") { e.preventDefault(); stepBy(-1); }
+  if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); vid.pause(); vid.currentTime += e.key === "ArrowRight" ? 0.1 : -0.1; }
+});
+
+/* boundary edits */
+const MIN = 0.1;
+function setStart(s, t) {
+  if (!s) return;
+  const list = cycleSteps(), i = list.indexOf(s), c = cycleOf(curCycle);
+  let lo; const hi = s.end - MIN;
+  if (i === 0) {
+    const prev = S.cycles.filter(x => x.end <= c.start + 0.01 && x.index !== c.index).sort((a, b) => b.end - a.end)[0];
+    lo = prev ? prev.end : 0;
+  } else lo = list[i - 1].start + MIN;
+  if (t < lo || t > hi) { toast(`Start must be between ${mmss(lo)} and ${mmss(hi)}.`); return; }
+  t = Math.round(t * 100) / 100;
+  if (i === 0) c.start = t; else list[i - 1].end = t;
+  s.start = t; s.edited = true; markDirty(); renderAll(false);
+}
+function setEndHere() {
+  const s = curStep(); if (!s) return;
+  const list = cycleSteps(), i = list.indexOf(s), t = vid.currentTime;
+  if (i < list.length - 1) { setStart(list[i + 1], t); return; }
+  const c = cycleOf(curCycle);
+  const next = S.cycles.filter(x => x.start >= c.end - 0.01 && x.index !== c.index).sort((a, b) => a.start - b.start)[0];
+  const hi = next ? next.start : S.duration;
+  if (t < s.start + MIN || t > hi) { toast(`End must be between ${mmss(s.start + MIN)} and ${mmss(hi)}.`); return; }
+  s.end = c.end = Math.round(t * 100) / 100; s.edited = true; markDirty(); renderAll(false);
+}
+function split() {
+  const s = curStep(), t = Math.round(vid.currentTime * 100) / 100;
+  if (!s || t <= s.start + MIN || t >= s.end - MIN) { toast("Move the playhead inside the selected step to split it."); return; }
+  const n = {...s, id: newId("s"), element_id: newId("E"), start: t, title: `${s.title} (2)`, tools: [...s.tools], materials: [...s.materials], key_points: [...s.key_points], edited: true};
+  n.transcript = (s.transcript || []).filter(l => l.t >= t);
+  s.transcript = (s.transcript || []).filter(l => l.t < t);
+  s.end = t; s.edited = true; S.steps.push(n); markDirty(); selectStep(n.id, false);
+}
+function merge() {
+  const s = curStep(), list = cycleSteps(), n = list[list.indexOf(s) + 1];
+  if (!s || !n) { toast("There is no next step to merge with."); return; }
+  s.end = n.end; s.edited = true;
+  s.transcript = [...(s.transcript || []), ...(n.transcript || [])];
+  if (n.description) s.description = [s.description, n.description].filter(Boolean).join(" ");
+  S.steps = S.steps.filter(x => x !== n); markDirty(); renderAll(false);
+}
+function removeStep() {
+  const s = curStep(), list = cycleSteps(), i = list.indexOf(s);
+  if (!s) return;
+  if (list.length === 1) { toast("A cycle needs at least one step."); return; }
+  if (!confirm(`Delete "${s.title}"? Its time goes to the neighbouring step.`)) return;
+  if (i > 0) list[i - 1].end = s.end; else list[1].start = s.start;
+  S.steps = S.steps.filter(x => x !== s); curStepId = (list[i - 1] || list[1]).id; markDirty(); renderAll(true);
+}
+
+/* ------------------------------------------------------------ time study math (mirrors the .xlsx) */
+const rnd = x => { const k = 10 ** (CFG.sheet_decimals || 0); return Math.round(x * k) / k; };
+function lowestRepeatable(vals) {
+  if (!vals.length) return [null, false];
+  const n = new Map(); vals.forEach(v => n.set(v, (n.get(v) || 0) + 1));
+  const rep = [...n].filter(([, c]) => c >= 2).map(([v]) => v);
+  return rep.length ? [Math.min(...rep), false] : [Math.min(...vals), true];
+}
+function studyStats(st) {
+  const rep = st.representative_cycle, cyc = [...st.cycles].sort((a, b) => a.index - b.index);
+  const normal = cyc.filter(c => !c.abnormal).map(c => c.index);
+  const totals = Object.fromEntries(cyc.map(c => [c.index, rnd(c.end - c.start)]));
+  const [T] = lowestRepeatable(normal.map(i => totals[i]));
+  const repS = st.steps.filter(s => s.cycle === rep).sort((a, b) => a.start - b.start);
+  const order = new Map();
+  [...repS, ...st.steps.filter(s => s.cycle !== rep).sort((a, b) => a.cycle - b.cycle || a.start - b.start)]
+    .forEach(s => { if (!order.has(s.element_id)) order.set(s.element_id, s); });
+  const elements = [...order].map(([eid, s0]) => {
+    const per = {};
+    cyc.forEach(c => { const ss = st.steps.filter(s => s.cycle === c.index && s.element_id === eid); if (ss.length) per[c.index] = rnd(ss.reduce((a, s) => a + s.end - s.start, 0)); });
+    const vals = normal.filter(i => i in per).map(i => per[i]);
+    const [lr, fb] = lowestRepeatable(vals), hi = vals.length ? Math.max(...vals) : null;
+    return {eid, title: s0.title, category: s0.category, per, lr, fallback: fb, hi, fl: lr != null && hi != null ? rnd(hi - lr) : null};
+  });
+  const sumT = rnd(elements.reduce((a, e) => a + (e.lr || 0), 0));
+  const split = Object.fromEntries(CATS.map(k => [k, repS.filter(s => s.category === k).reduce((a, s) => a + s.end - s.start, 0)]));
+  const repTotal = CATS.reduce((a, k) => a + split[k], 0);
+  const nt = normal.map(i => totals[i]);
+  return {cyc, normal, totals, T, elements, sumT, split, repTotal, repS, flCycle: nt.length ? rnd(Math.max(...nt) - T) : null,
+          takt: parseFloat(String(st.header?.takt || "").replace(",", ".")) || null};
+}
+
+/* single-series bar chart with an optional reference line */
+function barChart({items, max, ref, refLabel, unit = "s"}) {
+  const top = Math.max(max, ref || 0) * 1.12 || 1;
+  const step = niceStep(top), grid = [];
+  for (let v = step; v < top; v += step) grid.push(v);
+  return `<div class="bars">
+    ${grid.map(v => `<div class="gl" style="bottom:${v / top * 100}%"><span>${+v.toFixed(1)}</span></div>`).join("")}
+    ${ref ? `<div class="ref" style="bottom:${ref / top * 100}%"><span>${esc(refLabel)}</span></div>` : ""}
+    ${items.map(it => `<div class="bar${it.x ? " x" : ""}${it.hot ? " hot" : ""}" style="height:${it.segs.reduce((a, s) => a + s.v, 0) / top * 100}%" ${it.tip ? `data-tip="${esc(it.tip)}"` : ""}>
+      ${it.segs.map(s => `<div class="s" style="flex:${Math.max(s.v, 0.0001)};background:${s.c}" ${s.tip ? `data-tip="${esc(s.tip)}"` : ""}></div>`).join("")}
+      <div class="val">${it.label ?? ""}</div></div>`).join("")}
+  </div><div class="xl">${items.map(it => `<span title="${esc(it.name)}">${esc(it.name)}</span>`).join("")}</div>`;
+}
+function niceStep(top) { const raw = top / 4, p = 10 ** Math.floor(Math.log10(raw)), n = raw / p; return (n < 1.5 ? 1 : n < 3 ? 2 : n < 7 ? 5 : 10) * p; }
+const COLOR = {value_add: "var(--va)", necessary_nva: "var(--nnva)", waste: "var(--waste)"};
+const legend = () => `<div class="legend">${CATS.map(k => `<span><i style="background:${COLOR[k]}"></i>${CAT[k]}</span>`).join("")}</div>`;
+
+/* ------------------------------------------------------------ tab: time study */
+function renderTimeStudy() {
+  const st = studyStats(S), unit = CFG.sheet_decimals ? "" : " (whole seconds, as on the sheet)";
+  const pct = k => st.repTotal ? st.split[k] / st.repTotal * 100 : 0;
+  const overTakt = st.takt && st.T != null ? st.T > st.takt : null;
+  const items = st.cyc.map(c => ({name: `C${c.index}`, x: c.abnormal, label: st.totals[c.index],
+    segs: [{v: c.end - c.start, c: "var(--nnva)"}],
+    tip: `Cycle ${c.index}: ${f1(c.end - c.start)} s${c.abnormal ? `<br>Excluded (X)${c.note ? ": " + esc(c.note) : ""}` : ""}`}));
+  const maxC = Math.max(...st.cyc.map(c => c.end - c.start));
+  document.getElementById("tabBody").innerHTML = `
+  <div class="stack">
+    <div class="kpis">
+      <div class="kpi"><div class="k">Cycle time T (lowest repeatable)</div><div class="v">${st.T ?? "–"}<small> s</small></div>
+        <div class="d">${st.takt ? `<span class="state ${overTakt ? "bad" : "good"}">${overTakt ? "▲ Over" : "✓ Within"} takt ${st.takt} s</span>` : "Set takt on the study to compare"}</div></div>
+      <div class="kpi"><div class="k">Σt (sum of element lowest repeatable)</div><div class="v">${st.sumT}<small> s</small></div><div class="d">T − Σt = ${st.T != null ? rnd(st.T - st.sumT) : "–"} s</div></div>
+      <div class="kpi"><div class="k">Value-add share</div><div class="v">${pct("value_add").toFixed(0)}<small> %</small></div><div class="d">Cycle ${S.representative_cycle}, ${f1(st.split.value_add)} of ${f1(st.repTotal)} s</div></div>
+      <div class="kpi"><div class="k">Cycles observed</div><div class="v">${st.cyc.length}</div><div class="d">${st.cyc.length - st.normal.length} excluded (X)</div></div>
+      <div class="kpi"><div class="k">Cycle fluctuation</div><div class="v">${st.flCycle ?? "–"}<small> s</small></div><div class="d">Highest − lowest repeatable</div></div>
+    </div>
+    <div class="row2">
+      <section class="card chart">
+        <div class="chart-head"><h2>Cycle times</h2><span class="muted" style="font-size:.82rem">seconds per cycle${st.cyc.some(c => c.abnormal) ? " · hatched = excluded (X)" : ""}</span></div>
+        ${barChart({items, max: maxC, ref: st.takt, refLabel: st.takt ? `Takt ${st.takt} s` : ""})}
+      </section>
+      <section class="card">
+        <div class="chart-head"><h2>Where the time goes</h2><span class="muted" style="font-size:.82rem">cycle ${S.representative_cycle}</span></div>
+        ${legend()}
+        <div class="hbar">${CATS.filter(k => st.split[k] > 0).map(k => `<div style="flex:${st.split[k]};background:${COLOR[k]}" data-tip="${CAT[k]}: ${f1(st.split[k])} s (${pct(k).toFixed(0)}%)"></div>`).join("")}</div>
+        <div class="split-rows">${CATS.map(k => `<div><span><span class="sw ${k}"></span>${CAT[k]}</span><span>${f1(st.split[k])} s · ${pct(k).toFixed(0)}%</span></div>`).join("")}</div>
+        <p class="muted" style="font-size:.82rem;margin:12px 0 0">Waste and necessary non-value-add steps are where the Kaizen tab looks first.</p>
+      </section>
+    </div>
+    <section class="card">
+      <div class="chart-head"><h2>Manual time observation</h2><span class="muted" style="font-size:.82rem">seconds${unit} · <u>underline</u> lowest repeatable · <span style="color:var(--err)">red</span> highest · <s>struck</s> excluded</span></div>
+      <div class="scroll-x"><table class="tbl">
+        <thead><tr><th>#</th><th>Work element</th>${st.cyc.map(c => `<th class="num">${c.index}${c.abnormal ? " X" : ""}</th>`).join("")}<th class="num">Lowest rep.</th><th class="num">Highest</th><th class="num">Fluct.</th></tr></thead>
+        <tbody>${st.elements.map((e, i) => `<tr><td>${i + 1}</td><td><span class="sw ${e.category}"></span>${esc(e.title)}</td>${st.cyc.map(c => {
+          const v = e.per[c.index]; if (v == null) return `<td class="num"></td>`;
+          const cls = c.abnormal ? "x" : (v === e.hi && e.hi !== e.lr ? "hi" : v === e.lr ? "lo" : "");
+          return `<td class="num ${cls}">${v}</td>`; }).join("")}
+          <td class="num">${e.lr ?? ""}${e.fallback ? "*" : ""}</td><td class="num">${e.hi ?? ""}</td><td class="num">${e.fl ?? ""}</td></tr>`).join("")}
+          <tr><td></td><td><b style="font-weight:500">Cycle total</b></td>${st.cyc.map(c => `<td class="num ${c.abnormal ? "x" : ""}">${st.totals[c.index]}</td>`).join("")}<td class="num"><b style="font-weight:500">T ${st.T ?? ""}</b></td><td></td><td class="num">${st.flCycle ?? ""}</td></tr>
+        </tbody></table></div>
+      <p class="muted" style="font-size:.8rem;margin:8px 0 0">* no value repeats; lowest observed used. The .xlsx export has the full time-study sheets.</p>
+    </section>
+  </div>`;
+  bindTips(document.getElementById("tabBody"));
+}
+
+/* ------------------------------------------------------------ tab: kaizen */
+let actTimer = null;
+function renderKaizen() {
+  const st = studyStats(S);
+  const added = new Set(S.actions.map(a => a.title.toLowerCase()));
+  const open = S.actions.filter(a => a.status !== "done"), saving = open.reduce((a, x) => a + (+x.saving_s || 0), 0);
+  const done = S.actions.filter(a => a.status === "done").reduce((a, x) => a + (+x.saving_s || 0), 0);
+  const counts = {open: 0, in_progress: 0, done: 0}; S.actions.forEach(a => counts[a.status]++);
+  document.getElementById("tabBody").innerHTML = `
+  <div class="stack">
+    <div class="kpis">
+      <div class="kpi"><div class="k">Cycle time T</div><div class="v">${st.T ?? "–"}<small> s</small></div><div class="d">${st.takt ? `Takt ${st.takt} s` : "No takt set"}</div></div>
+      <div class="kpi"><div class="k">Potential saving (open actions)</div><div class="v">${f1(saving)}<small> s/cycle</small></div><div class="d">${st.T ? `${(saving / st.T * 100).toFixed(0)}% of T, estimated` : "estimated"}</div></div>
+      <div class="kpi"><div class="k">Saved (done actions)</div><div class="v">${f1(done)}<small> s/cycle</small></div><div class="d">Re-record the station to confirm</div></div>
+      <div class="kpi"><div class="k">Action plan</div><div class="v">${S.actions.length}</div><div class="d">${counts.open} open · ${counts.in_progress} in progress · ${counts.done} done</div></div>
+    </div>
+    <section class="card">
+      <div class="chart-head"><div><h2>Improvement opportunities</h2><span class="muted" style="font-size:.85rem">Copilot reads the steps, times across cycles and transcripts, and looks for the 8 wastes.</span></div>
+        <button class="btn primary" id="findBtn">${TABICON.copilot.replace("<svg", '<svg width="18" height="18"')}${S.kaizen_ideas.length ? "Find again" : "Find opportunities"}</button></div>
+      <div class="ideas" id="ideas">${S.kaizen_ideas.length ? S.kaizen_ideas.map((d, i) => `
+        <div class="idea">
+          <div class="meta">${d.waste ? `<span class="chip">${esc(d.waste)}</span>` : ""}<span class="chip">Effort: ${esc(d.effort)}</span>${d.steps?.length ? `<span class="chip">Step ${d.steps.join(", ")}</span>` : ""}</div>
+          <b>${esc(d.title)}</b>
+          ${d.saving_s ? `<div class="save">−${f1(d.saving_s)} s<span class="muted" style="font-size:.8rem;font-weight:400"> per cycle, est.</span></div>` : `<div class="muted" style="font-size:.85rem">Quality / safety</div>`}
+          <p>${esc(d.detail)}</p>
+          <button class="btn ${added.has(d.title.toLowerCase()) ? "" : "tonal"}" data-add="${i}" ${added.has(d.title.toLowerCase()) ? "disabled" : ""}>${added.has(d.title.toLowerCase()) ? "In action plan" : "Add to action plan"}</button>
+        </div>`).join("") : `<p class="muted" style="grid-column:1/-1;margin:0">No ideas yet. Press Find opportunities.</p>`}</div>
+    </section>
+    <section class="card">
+      <div class="chart-head"><h2>Action plan</h2><button class="btn" id="addAct">Add action</button></div>
+      ${S.actions.length ? `<div class="scroll-x"><table class="tbl act"><thead><tr><th>Action</th><th>Waste</th><th class="num">Saving (s)</th><th>Owner</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody>
+        ${S.actions.map((a, i) => `<tr>
+          <td style="min-width:240px"><input type="text" data-f="title" data-i="${i}" value="${esc(a.title)}" aria-label="Action">${a.detail ? `<div class="muted" style="font-size:.8rem;margin-top:3px">${esc(a.detail)}</div>` : ""}</td>
+          <td>${esc(a.waste)}</td>
+          <td class="num" style="width:90px"><input type="number" step="0.1" min="0" data-f="saving_s" data-i="${i}" value="${a.saving_s}" aria-label="Saving in seconds"></td>
+          <td style="width:140px"><input type="text" data-f="owner" data-i="${i}" value="${esc(a.owner)}" aria-label="Owner"></td>
+          <td style="width:150px"><input type="date" data-f="due" data-i="${i}" value="${esc(a.due)}" aria-label="Due date"></td>
+          <td style="width:140px"><select data-f="status" data-i="${i}" aria-label="Status">${[["open", "Open"], ["in_progress", "In progress"], ["done", "Done"]].map(([v, t]) => `<option value="${v}" ${a.status === v ? "selected" : ""}>${t}</option>`).join("")}</select></td>
+          <td><button class="iconbtn" data-rm="${i}" aria-label="Remove action">${ICON.x}</button></td></tr>`).join("")}
+      </tbody></table></div>` : `<p class="muted" style="margin:0">Add ideas from above, or add your own action.</p>`}
+    </section>
+  </div>`;
+  document.getElementById("findBtn").onclick = findIdeas;
+  document.querySelectorAll("[data-add]").forEach(b => b.onclick = () => {
+    const d = S.kaizen_ideas[+b.dataset.add];
+    S.actions.push({id: newId("a"), title: d.title, detail: d.detail, waste: d.waste, steps: d.steps || [], saving_s: d.saving_s || 0, effort: d.effort, owner: "", due: "", status: "open"});
+    saveActions(true); renderKaizen();
+  });
+  document.getElementById("addAct").onclick = () => { S.actions.push({id: newId("a"), title: "New action", detail: "", waste: "", steps: [], saving_s: 0, effort: "medium", owner: "", due: "", status: "open"}); saveActions(true); renderKaizen(); };
+  document.querySelectorAll("[data-rm]").forEach(b => b.onclick = () => { S.actions.splice(+b.dataset.rm, 1); saveActions(true); renderKaizen(); });
+  document.querySelectorAll(".act [data-f]").forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
+    const a = S.actions[+el.dataset.i]; a[el.dataset.f] = el.dataset.f === "saving_s" ? Math.max(0, +el.value || 0) : el.value;
+    if (el.tagName === "SELECT" || el.dataset.f === "saving_s") { saveActions(true); if (el.tagName === "SELECT") renderKaizen(); } else saveActions(false);
+  }));
+}
+function saveActions(now) {
+  clearTimeout(actTimer);
+  const go = async () => {
+    const clean = S.actions.map(a => ({...a, title: a.title.trim() || "Untitled action"}));
+    try { await api(`/api/studies/${S.id}/actions`, jsonBody("PUT", clean)); } catch (e) { toast(`Action plan not saved: ${e.message}`); }
+  };
+  if (now) go(); else actTimer = setTimeout(go, 700);
+}
+async function findIdeas() {
+  const b = document.getElementById("findBtn"); b.disabled = true; b.innerHTML = `${SPARK.replace('class="spark"', 'class="spark" style="width:18px;height:18px;animation:spin 2s linear infinite"')}Looking for waste…`;
+  try { const r = await (await api(`/api/studies/${S.id}/kaizen`, {method: "POST"})).json(); S.kaizen_ideas = r.ideas; toast(`${r.ideas.length} ideas found`); }
+  catch (e) { toast(`Could not answer: ${e.message}`); }
+  if (curTab === "kaizen") renderKaizen();
+}
+
+/* ------------------------------------------------------------ tab: copilot */
+const SUGGEST = [
+  ["Explain it simply", "The whole task in short, plain steps", "Explain this whole task to a new worker in short, plain sentences. One numbered line per step. Say which hand to use and where each part comes from. No jargon."],
+  ["Before I start", "Parts, tools and where they are", "What do I need before I start this task? List the parts and tools, and where each one is in the workspace."],
+  ["Common mistakes", "What to be careful about", "Which steps are easy to get wrong, and how do I know I did each one right? Use what can be SEEN, not heard."],
+  ["Checklist", "One line per step to tick off", "Make a short checklist I can tick off while I do the task: one line per step, starting with a verb."],
+  ["Which steps are hardest?", "Where to slow down", "Which steps are the hardest or fastest to follow in the video, and what should I watch closely in each?"],
+  ["Explain one step", "Pick a step and ask", "Explain step 3 in more detail: what each hand does, where, and how I know it is done."],
+];
+let asking = false;
+function renderCopilot() {
+  document.getElementById("tabBody").innerHTML = `
+  <div class="chatwrap">
+    <div class="msgs" id="msgs"></div>
+    <div class="chatbar">
+      <form class="chatbox" id="chatForm">
+        <textarea id="q" rows="1" placeholder="Type your question about this task" aria-label="Your question"></textarea>
+        ${S.copilot.length ? `<button type="button" class="iconbtn" id="clearChat" title="Clear chat" aria-label="Clear chat">${ICON.x}</button>` : ""}
+        <button class="go" id="send" style="width:40px;height:40px" aria-label="Send">${ICON.send}</button>
+      </form>
+      <div class="chatnote">Answers come only from this lesson's steps and what was seen in the video. If something is not shown, it will say so. Ask a person if you are unsure.</div>
+    </div>
+  </div>`;
+  drawMessages();
+  const q = document.getElementById("q");
+  q.oninput = () => { q.style.height = "auto"; q.style.height = Math.min(q.scrollHeight, 180) + "px"; };
+  q.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); document.getElementById("chatForm").requestSubmit(); } };
+  document.getElementById("chatForm").onsubmit = e => { e.preventDefault(); const t = q.value.trim(); if (t) { q.value = ""; q.oninput(); ask(t); } };
+  const cl = document.getElementById("clearChat");
+  if (cl) cl.onclick = async () => { if (!confirm("Clear this chat?")) return; try { await api(`/api/studies/${S.id}/copilot`, {method: "DELETE"}); S.copilot = []; renderCopilot(); } catch (e) { toast(e.message); } };
+  q.focus();
+}
+function drawMessages(pending) {
+  const el = document.getElementById("msgs"); if (!el) return;
+  if (!S.copilot.length && !pending) {
+    el.innerHTML = `<div class="hello-chat"><h2 class="hello">Ask about this task</h2>
+      <div class="hello-sub" style="font-size:1.15rem;margin-bottom:0">Type in your own words. Or start with one of these.</div>
+      <div class="sugg">${SUGGEST.map(([t, d], i) => `<button type="button" data-s="${i}"><b>${t}</b><span>${d}</span></button>`).join("")}</div></div>`;
+    el.querySelectorAll("[data-s]").forEach(b => b.onclick = () => ask(SUGGEST[+b.dataset.s][2], SUGGEST[+b.dataset.s][0]));
+    return;
+  }
+  const label = t => { const s = SUGGEST.find(x => x[2] === t); return s ? s[0] : t; };
+  el.innerHTML = S.copilot.map((m, i) => m.role === "user"
+    ? `<div class="msg user"><div class="bubble">${esc(label(m.text))}</div></div>`
+    : `<div class="msg model">${SPARK}<div class="body"><div class="md">${md(m.text)}</div><div class="msg-tools"><button class="iconbtn" data-copy="${i}" title="Copy" aria-label="Copy answer" style="width:32px;height:32px">${ICON.copy}</button></div></div></div>`).join("")
+    + (pending ? `<div class="msg user"><div class="bubble">${esc(label(pending))}</div></div><div class="msg model"><div class="thinking">${SPARK}<span>Thinking…</span></div></div>` : "");
+  el.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => { navigator.clipboard?.writeText(S.copilot[+b.dataset.copy].text).then(() => toast("Copied"), () => toast("Copy failed")); });
+  el.scrollTop = el.scrollHeight;
+}
+async function ask(text) {
+  if (asking) return;
+  if (dirty && !(await save())) return;
+  asking = true; drawMessages(text);
+  const send = document.getElementById("send"); if (send) send.disabled = true;
+  try { const r = await (await api(`/api/studies/${S.id}/copilot`, jsonBody("POST", {message: text}))).json(); S.copilot = r.messages; }
+  catch (e) { toast(`Copilot: ${e.message}`); }
+  asking = false;
+  if (curTab === "copilot") renderCopilot();
+}
+
+/* ------------------------------------------------------------ station template (shared) */
+const LOC_TYPES = ["bin", "bench", "fixture", "equipment", "tool", "output"];
+const LOC_COLS = [["far_left", "Far left"], ["left", "Left"], ["center", "Center"], ["right", "Right"], ["far_right", "Far right"]];
+const LOC_ROWS = [["back", "Back"], ["middle", "Middle"], ["front", "Front"]];
+const LOC_SHELF = [["", "–"], ["top", "Top"], ["middle", "Middle"], ["bottom", "Bottom"]];
+const opts = (list, v) => list.map(([k, t]) => `<option value="${k}" ${String(v ?? "") === k ? "selected" : ""}>${t}</option>`).join("");
+let STPL = null, STPL_ISSUES = [], STPL_GRID = null, tplDirty = false, chartVer = Date.now(), tplSel = null;
+const stationKey = () => S.station_key || "";
+async function loadTemplate() {
+  STPL = null; STPL_ISSUES = []; STPL_GRID = null; tplDirty = false;
+  if (!stationKey()) return;
+  try {
+    const r = await fetch(`/api/stations/${stationKey()}`);
+    if (r.ok) { const j = await r.json(); STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; }
+  } catch {}
+}
+const tplLocLabel = id => (STPL?.layout || []).find(l => l.id === id)?.label || "";
+async function reanalyze() {
+  const tm = CFG.timing_model || "Gemini", cheap = /flash/i.test(tm);
+  if (!confirm(`Prepare this lesson again using the station template? ${tm} finds every template step in the video. This replaces the current step times (about ${cheap ? "$1-1.50" : "$5-6"} for an 11-minute video).`)) return;
+  try { await api(`/api/studies/${S.id}/reanalyze`, {method: "POST"}); const id = S.id; S = null; openStudy(id); } catch (e) { toast(e.message); }
+}
+
+/* ------------------------------------------------------------ tab: work chart */
+function renderChartTab() {
+  const body = document.getElementById("tabBody");
+  body.innerHTML = `
+  <div class="chart-layout">
+    <section class="card">
+      <div class="chart-head"><h2>Where each step happens</h2><a class="btn text" href="/api/studies/${S.id}/chart.png?download=1">${ICON.dl}Save as picture</a></div>
+      <div class="chart-img"><img id="chartImg" alt="Map of the workspace, seen from above. Each step is a numbered circle placed where it happens; arrows show where to move next." src="/api/studies/${S.id}/chart.svg?v=${chartVer}"></div>
+    </section>
+    <section class="card stack" style="gap:12px">
+      <div><h2>How to read the map</h2>
+        <ul class="howto">
+          <li><b>You are at the bottom</b>, facing the work area.</li>
+          <li><b>Numbers</b> are the steps, placed where each one happens.</li>
+          <li><b>Arrows</b> show where your hands go next. A dashed arrow means you walk or reach further.</li>
+          <li><b>Boxes and circles</b> are the places: bins, fixtures and tools, with their names.</li>
+          <li><b>Shaded numbers</b> are the steps that build the part.</li>
+        </ul></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <a class="btn primary" href="#/study/${S.id}/instructions">Watch the steps</a>
+        ${STPL ? '<button class="btn" id="ceOpen">✎ Edit the map</button>' : ""}
+        <a class="btn" href="#/study/${S.id}/template">Station template</a>
+      </div>
+      ${STPL ? "" : '<div class="warnbox">No station template yet. Set one up on the Station template tab to place steps on the map.</div>'}
+    </section>
+  </div>`;
+  const co = document.getElementById("ceOpen"); if (co) co.onclick = () => { chartEdit = true; renderChartTab(); };
+  if (chartEdit && STPL) { body.insertAdjacentHTML("beforeend", chartEditor()); bindChartEditor(); }
+}
+
+/* ------------------------------------------------------------ tab: time study sheets */
+async function renderObservation() {
+  const cyc = [...S.cycles].sort((a, b) => a.index - b.index);
+  let auto = {};
+  try { auto = await (await api(`/api/studies/${S.id}/cycle-comments`)).json(); } catch {}
+  if (curTab !== "observation") return;
+  document.getElementById("tabBody").innerHTML = `
+  <section class="card" style="margin-bottom:14px">
+    <div class="chart-head"><div><h2>Cycles</h2>
+      <span class="muted" style="font-size:.84rem">Nothing is crossed out until you tick X. Gemini only suggests (orange) with the reason and video time. Comments come from element times: elements 5 s or more over their lowest, plus readings to check. Comments come from element times (elements 5 s or more over their lowest), plus what was seen in that element. Type to override.</span></div>
+      <button class="btn primary" id="cycSave" disabled>Save</button></div>
+    <div class="scroll-x"><table class="tbl"><thead><tr><th>#</th><th>Video time</th><th class="num">Secs</th><th>X</th><th>Suggested X (Gemini)</th><th>Comment for fluctuation reason</th></tr></thead><tbody>
+      ${cyc.map(c => `<tr><td>${c.index}</td><td>${mmss(c.start)} – ${mmss(c.end)}</td><td class="num">${fmtS(rdur(c.start, c.end))}</td>
+        <td><input type="checkbox" data-cx="${c.index}" ${c.abnormal ? "checked" : ""} aria-label="Exclude cycle ${c.index}"></td>
+        <td style="font-size:.84rem">${c.x_suggested || c.x_reason ? `<span class="chip" style="background:#fff4e5;color:#7a4b00">${esc(c.x_reason || "suggested")}${c.x_time != null ? ` at ${mmss(c.x_time)}` : ""}</span>` : '<span class="muted">–</span>'}</td>
+        <td><input type="text" data-cn="${c.index}" value="${esc(c.note || "")}" placeholder="${esc(auto[c.index] || "")}" aria-label="Comment for cycle ${c.index}" style="min-width:320px"></td></tr>`).join("")}
+    </tbody></table></div>
+  </section>
+  <section class="card" style="margin-bottom:14px">
+    <div class="chart-head"><div><h2>Observation Preparation Sheet</h2>
+      <span class="muted" style="font-size:.84rem">Circled = highest, underlined = lowest valid, X = excluded.</span></div></div>
+    <div class="chart-img"><img alt="Observation preparation sheet" src="/api/studies/${S.id}/export/prep.png?v=${Date.now()}"></div>
+  </section>
+  <section class="card">
+    <div class="chart-head"><div><h2>Manual Time Observation Sheet</h2>
+      <span class="muted" style="font-size:.84rem">Elements from the station template. Readings rounded at each break point, so elements add up to the cycle. ? = includes a missed break point.</span></div>
+      <button class="btn" id="obsPdf">${ICON.dl}PDF</button></div>
+    <div class="chart-img"><img alt="Manual time observation sheet" src="/api/studies/${S.id}/export/observation.png?v=${Date.now()}"></div>
+  </section>`;
+  document.getElementById("obsPdf").onclick = () => download(`/api/studies/${S.id}/export/observation.pdf`, "Drawing the time study sheets");
+  const sv = document.getElementById("cycSave");
+  document.querySelectorAll("[data-cx]").forEach(el => el.onchange = () => { cycleOf(+el.dataset.cx).abnormal = el.checked; dirty = true; sv.disabled = false; renderBar(); });
+  document.querySelectorAll("[data-cn]").forEach(el => el.oninput = () => { cycleOf(+el.dataset.cn).note = el.value; dirty = true; sv.disabled = false; renderBar(); });
+  sv.onclick = async () => { if (await save()) renderObservation(); };
+}
+
+/* ------------------------------------------------------------ tab: step breakdown */
+let bdStep = null;
+let bdCycle = null;
+const viewCycle = () => (bdCycle != null && S.cycles.some(c => c.index === bdCycle)) ? bdCycle : S.representative_cycle;
+function breakdownRows() {
+  const rep = S.steps.filter(s => s.cycle === viewCycle());
+  const rt = s => rdur(s.start, s.end);
+  if (STPL?.elements?.length && S.analysis_mode === "template") {
+    return STPL.elements.map((e, i) => {
+      const ss = rep.filter(s => s.element_id === e.id).sort((a, b) => a.start - b.start);
+      return {n: i + 1, title: e.name, desc: e.description || ss.find(s => s.description)?.description || "", loc: tplLocLabel(e.location_id), hand: ss[0]?.hand || e.hand, time: ss.length ? ss.reduce((a, s) => a + rt(s), 0) : null,
+              va: e.category === "value_add", transcript: ss.flatMap(s => (s.transcript || []).map(l => `+${Math.max(0, l.t - s.start).toFixed(1)} s  ${l.text}`)), start: ss[0]?.start, end: ss.length ? ss[ss.length - 1].end : null, gap: ss.some(s => s.covers_gap)};
+    });
+  }
+  const labels = Object.fromEntries((S.layout || []).map(l => [l.id, l.label]));
+  return repSteps().map((s, i) => ({n: i + 1, title: s.title, loc: labels[s.location_id] || "", hand: s.hand, time: rt(s), va: s.category === "value_add",
+    transcript: (s.transcript || []).map(l => `+${Math.max(0, l.t - s.start).toFixed(1)} s  ${l.text}`), start: s.start, end: s.end, gap: false}));
+}
+function renderBreakdown() {
+  if (timeEdit && STPL?.elements?.length && S.analysis_mode === "template") {
+    if (teCycle == null || !cycleOf(teCycle)) teCycle = S.representative_cycle;
+    document.getElementById("tabBody").innerHTML = timeEditor();
+    bindTimeEditor();
+    return;
+  }
+  const rows = breakdownRows();
+  if (bdStep == null || !rows.some(r => r.n === bdStep)) bdStep = rows[0]?.n ?? null;
+  setTimeout(() => {
+    const sel = document.getElementById("bdCyc");
+    if (sel) sel.onchange = () => { bdCycle = +sel.value; renderBreakdown(); };
+    const rb = document.getElementById("bdRep");
+    if (rb) rb.onclick = () => { S.representative_cycle = viewCycle(); bdCycle = null; dirty = true; renderBar(); renderBreakdown(); toast("Representative cycle changed: Save changes to keep it"); };
+  });
+  const total = rows.reduce((a, r) => a + (r.time || 0), 0), va = rows.filter(r => r.va).reduce((a, r) => a + (r.time || 0), 0);
+  document.getElementById("tabBody").innerHTML = `
+  <div class="bd-layout">
+    <section class="card">
+      <div class="chart-head"><h2>Every step, in order</h2>
+        <div style="flex-basis:100%;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.86rem">
+          ${S.cycles.length > 1 ? `<label class="speed">Watch <select id="bdCyc">${[...S.cycles].sort((a, b) => a.index - b.index).map(c => `<option value="${c.index}" ${c.index === viewCycle() ? "selected" : ""}>${c.index === S.representative_cycle ? "Best example" : `Time ${c.index}`}</option>`).join("")}</select></label>` : ""}
+          <span class="muted">${rows.length} steps · about ${Math.round(total)} seconds in all</span>
+        </div></div>
+      <div class="scroll-x"><table class="tbl bd-tbl"><thead><tr><th class="num">Step</th><th>What to do</th><th>Where</th><th>Hands</th><th class="num">Seconds</th><th>What the hands do</th></tr></thead><tbody>
+        ${rows.map(r => `<tr data-row="${r.n}" class="${r.n === bdStep ? "sel" : ""}" tabindex="0" aria-label="Step ${r.n}: ${esc(r.title)}. Press Enter to watch.">
+          <td class="num"><b style="font-weight:600">${r.n}</b></td><td style="min-width:200px">${esc(r.title)}${r.desc ? `<div class="muted" style="font-size:.8rem;margin-top:2px">${esc(r.desc)}</div>` : ""}</td>
+          <td>${esc(r.loc) || '<span class="muted">–</span>'}</td><td>${{L: "Left hand", R: "Right hand", both: "Both hands"}[r.hand] || esc(r.hand || "")}</td>
+          <td class="num">${r.time == null ? '<span class="muted">–</span>' : f1(r.time) + (r.gap ? "?" : "")}</td>
+          <td class="tr-cell">${r.transcript.map(esc).join("\n") || '<span class="muted">–</span>'}</td></tr>`).join("")}
+        <tr><td></td><td><b style="font-weight:600">Whole task</b></td><td></td><td></td><td class="num"><b style="font-weight:600">${f1(total)}</b></td><td></td></tr>
+      </tbody></table></div>
+    </section>
+    <section class="card sticky">
+      <div class="chart-head"><h2 id="bdTitle">Step</h2></div>
+      <video id="bdVid" src="/api/studies/${S.id}/video" preload="auto" muted playsinline controls></video>
+      <p class="muted" style="font-size:.9rem;margin:8px 0 0">Choose a row to watch that step on a loop.</p>
+    </section>
+  </div>`;
+  const v = document.getElementById("bdVid");
+  const show = (n, play) => {
+    const r = rows.find(x => x.n === n); if (!r) return; bdStep = n;
+    document.querySelectorAll("[data-row]").forEach(t => t.classList.toggle("sel", +t.dataset.row === n));
+    document.getElementById("bdTitle").textContent = `Step ${n}: ${r.title}`;
+    if (r.start != null) { v.currentTime = r.start; if (play) v.play().catch(() => {}); }
+  };
+  v.addEventListener("loadedmetadata", () => show(bdStep, false), {once: true});
+  v.addEventListener("timeupdate", () => { const r = rows.find(x => x.n === bdStep); if (r && r.start != null && !v.paused && (v.currentTime >= r.end - 0.03 || v.currentTime < r.start - 0.3)) v.currentTime = r.start; });
+  document.querySelectorAll("[data-row]").forEach(t => { t.onclick = () => show(+t.dataset.row, true); t.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); show(+t.dataset.row, true); } }; });
+  if (bdStep != null) { const r = rows.find(x => x.n === bdStep); document.getElementById("bdTitle").textContent = `Step ${r.n}: ${r.title}`; }
+}
+
+/* ------------------------------------------------------------ teach (feedback layer) */
+const TEACH_EX = {
+  instructions: ["Step 4 is done with the left hand", "Make the step descriptions simpler, one short sentence each", "Step 12 starts when the screw touches the part"],
+  copilot: ["Always say which hand to use", "Use shorter sentences"],
+  chart: ["The bins on the left are slightly closer together", "Move the drill holder to the right of the fixture", "Element 9 happens at the fixture, not the bench"],
+  observation: ["Element 5 starts when the screw touches the part, not when it enters", "Cycle 3 is rework, always mark rework as X", "Element 20 is usually under 2 s"],
+  breakdown: ["Make the step descriptions simpler, one short sentence each", "Step 12 is done with the left hand", "Bin 2 holds springs, call it 'Springs bin'"],
+  template: ["Bin 2 holds springs, rename it 'Springs bin'", "Element 13 ends when the product touches the tray", "On this station the operator always uses the drill for elements 4-5"],
+};
+let teachProp = null, teachBusy = false;
+function closeTeach() { const t = document.getElementById("teach"); if (t) t.hidden = true; }
+function teachHtml() {
+  const ex = TEACH_EX[curTab] || TEACH_EX.chart;
+  const hist = (STPL?.feedback || []).slice(-5).reverse();
+  const p = teachProp;
+  return `<header><svg class="spark" style="width:26px;height:26px"><use href="#spark"/></svg><b>Teach</b><button class="iconbtn" id="teachX" aria-label="Close">${ICON.x}</button></header>
+  <div class="tb">
+    <div class="muted" style="font-size:.9rem">Type what is wrong or unclear in this lesson. You will see the exact changes before anything is saved, and the fix is remembered for every lesson made at ${esc(S.header?.line || "this workplace")}.</div>
+    <textarea id="teachText" rows="4" aria-label="What is wrong" placeholder="e.g. Step 4 is done with the left hand, and the descriptions should be simpler">${esc(p?.text || "")}</textarea>
+    <div class="ex">${ex.map(t => `<button data-ex="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+    <div style="display:flex;justify-content:flex-end"><button class="btn primary" id="teachSend" ${teachBusy ? "disabled" : ""}>${teachBusy ? "Thinking…" : "Suggest changes"}</button></div>
+    ${p ? `
+      ${p.reply ? `<div class="reply">${esc(p.reply)}</div>` : ""}
+      ${(p.notes || []).map(n => `<div class="muted" style="font-size:.8rem">${esc(n)}</div>`).join("")}
+      ${p.items.length || p.rules.length || p.descriptions ? `<div class="prop">
+        ${p.items.map(it => `<label><input type="checkbox" data-it="${it.id}" checked><span>${esc(it.label)}<span class="ba"><br><s>${esc(it.before)}</s> → <b>${esc(it.after)}</b></span>${it.why ? `<small>${esc(it.why)}</small>` : ""}</span></label>`).join("")}
+        ${p.descriptions ? `<label><input type="checkbox" id="teachDesc" checked><span>Write the step descriptions<small>Style: ${esc(p.descriptions.style)}. Shown in the step breakdown and exports.</small></span></label>` : ""}
+        ${p.rules.map(r => `<label><input type="checkbox" data-ru="${r.id}" checked><span>Remember: ${esc(r.text)}<small>${esc({timing: "Used when timing videos of this station", chart: "Used for the layout and work chart", descriptions: "Used when writing step descriptions", sheets: "Sheets and comments", general: "Used in every analysis of this station"}[r.scope] || r.scope)}</small></span></label>`).join("")}
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end"><button class="btn text" id="teachDrop">Discard</button><button class="btn primary" id="teachApply">Apply selected</button></div>` : ""}` : ""}
+    ${hist.length ? `<div class="hist"><b style="color:var(--ink-2)">Recently taught</b><ul style="margin:6px 0 0;padding-left:18px">${hist.map(h => `<li>${esc(h.text)} <span>(${h.done.length} change${h.done.length === 1 ? "" : "s"})</span></li>`).join("")}</ul></div>` : ""}
+  </div>`;
+}
+function openTeach() {
+  const t = document.getElementById("teach");
+  if (!STPL) { toast("Fixes need the lesson's workplace set: add a video with 'Where is it done?' filled in."); return; }
+  t.innerHTML = teachHtml(); t.hidden = false; bindTeach();
+  document.getElementById("teachText").focus();
+}
+function bindTeach() {
+  const t = document.getElementById("teach");
+  document.getElementById("teachX").onclick = closeTeach;
+  t.querySelectorAll("[data-ex]").forEach(b => b.onclick = () => { const ta = document.getElementById("teachText"); ta.value = b.dataset.ex; ta.focus(); });
+  document.getElementById("teachSend").onclick = async () => {
+    const text = document.getElementById("teachText").value.trim();
+    if (text.length < 2) { toast("Type what you want to change."); return; }
+    teachBusy = true; teachProp = {text, items: [], rules: []}; t.innerHTML = teachHtml(); bindTeach();
+    try { teachProp = await (await api(`/api/studies/${S.id}/feedback`, jsonBody("POST", {text, tab: curTab}))).json(); }
+    catch (e) { toast(e.message); teachProp = null; }
+    teachBusy = false; t.innerHTML = teachHtml(); bindTeach();
+    const ta = document.getElementById("teachText"); if (ta && !teachProp) ta.value = text;
+  };
+  const drop = document.getElementById("teachDrop");
+  if (drop) drop.onclick = () => { teachProp = null; t.innerHTML = teachHtml(); bindTeach(); };
+  const ap = document.getElementById("teachApply");
+  if (ap) ap.onclick = async () => {
+    const items = [...t.querySelectorAll("[data-it]:checked")].map(x => x.dataset.it);
+    const rules = [...t.querySelectorAll("[data-ru]:checked")].map(x => x.dataset.ru);
+    const descriptions = !!document.getElementById("teachDesc")?.checked;
+    if (!items.length && !rules.length && !descriptions) { toast("Tick at least one change."); return; }
+    if (tplDirty && !confirm("You have unsaved template edits. Applying will reload the template and drop them. Continue?")) return;
+    ap.disabled = true; ap.textContent = descriptions ? "Writing descriptions…" : "Applying…";
+    try {
+      const j = await (await api(`/api/studies/${S.id}/feedback/${teachProp.pid}/apply`, jsonBody("POST", {items, rules, descriptions}))).json();
+      STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; tplDirty = false; chartVer = Date.now();
+      S = {...S, ...j.study, actions: S.actions, kaizen_ideas: S.kaizen_ideas, copilot: S.copilot};
+      teachProp = null; t.innerHTML = teachHtml(); bindTeach();
+      toast(`Applied: ${j.done.length} change${j.done.length === 1 ? "" : "s"}`);
+      switchTab(curTab);
+    } catch (e) { toast(e.message); ap.disabled = false; ap.textContent = "Apply selected"; }
+  };
+}
+document.getElementById("teachFab").onclick = () => { const t = document.getElementById("teach"); if (t.hidden) openTeach(); else closeTeach(); };
+function learnedCard() {
+  const rules = STPL?.rules || [];
+  const SC = {timing: "Step timing", chart: "Map", descriptions: "Wording", sheets: "Sheets", general: "General"};
+  return `<section class="card">
+    <div class="chart-head"><div><h2>What it has learned</h2>
+      <span class="muted" style="font-size:.9rem">Fixes you suggested with the Suggest a fix button. They are used every time a video of this station is prepared.</span></div></div>
+    ${rules.length ? rules.map(r => `<div class="rule-row"><span class="chip">${SC[r.scope] || esc(r.scope)}</span><span class="t">${esc(r.text)}</span><button class="iconbtn" data-delrule="${esc(r.id)}" aria-label="Forget this" title="Forget this" style="width:30px;height:30px">${ICON.x}</button></div>`).join("")
+      : '<p class="muted" style="margin:6px 0 0;font-size:.9rem">Nothing yet. Use Suggest a fix to correct steps, places or wording.</p>'}
+  </section>`;
+}
+function bindLearned() {
+  document.querySelectorAll("[data-delrule]").forEach(b => b.onclick = async () => {
+    if (!confirm("Forget this instruction?")) return;
+    try { const j = await (await api(`/api/stations/${stationKey()}/rules/${b.dataset.delrule}`, {method: "DELETE"})).json(); STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; renderTemplateTab(); } catch (e) { toast(e.message); }
+  });
+}
+
+/* ------------------------------------------------------------ reference cycle (calibration) */
+let calMode = false, calMarks = {}, calIdx = 0, calCycle = null;
+/* stopwatch arithmetic like the sheets: round each reading, element = difference */
+const DEC = () => (CFG.sheet_decimals ?? 1);
+const rread = t => Math.round(t * 10 ** DEC() + 1e-9) / 10 ** DEC();
+const rdur = (a, b) => Math.round((rread(b) - rread(a)) * 10 ** DEC()) / 10 ** DEC();
+const fmtS = v => v == null ? "" : (+v).toFixed(DEC());
+const fmtT = t => { const m = Math.floor(t / 60); return `${m}:${(t - m * 60).toFixed(1).padStart(4, "0")}`; };
+function calibrationCard() {
+  const T = STPL, els = T.elements;
+  const refs = (T.references && T.references.length) ? T.references : (T.reference?.marks ? [{...T.reference, rid: "r1", legacy: true}] : []);
+  const rep = S.calibration;
+  if (calMode) {
+    const cyc = [...S.cycles].sort((a, b) => a.index - b.index);
+    const cur = els[calIdx];
+    return `<section class="card" id="calCard">
+      <div class="chart-head"><div><h2>Mark where each step starts</h2>
+        <span class="muted" style="font-size:.84rem">Pause on the exact frame where each step starts, then press <b>M</b> (or the button). ← → step 0.1 s, Shift+← → 1 s, Space play/pause.</span></div>
+        <div style="display:flex;gap:8px"><button class="btn" id="calCancel">Cancel</button><button class="btn primary" id="calSave">Save marks (${Object.keys(calMarks).length}/${els.length})</button></div></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px">
+        <div>
+          <label class="f" style="margin-bottom:8px">Run to mark<select id="calCyc">${cyc.map(c => `<option value="${c.index}" ${c.index === calCycle ? "selected" : ""}>Run ${c.index} · ${mmss(c.start)}–${mmss(c.end)}</option>`).join("")}</select></label>
+          <video id="calVid" src="/api/studies/${S.id}/video" preload="auto" muted playsinline controls style="border-radius:14px;max-height:380px"></video>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+            <button class="btn" data-step="-1">−1 s</button><button class="btn" data-step="-0.1">−0.1</button>
+            <span class="chip" id="calNow" style="font-variant-numeric:tabular-nums">0:00.0</span>
+            <button class="btn" data-step="0.1">+0.1</button><button class="btn" data-step="1">+1 s</button>
+            <label class="speed">Speed <select id="calSpeed">${[0.25, 0.5, 1].map(v => `<option value="${v}" ${v === 0.5 ? "selected" : ""}>${v}x</option>`).join("")}</select></label>
+          </div>
+          <button class="btn primary" id="calMark" style="margin-top:10px;width:100%;justify-content:center">${cur ? `M · Mark ${calIdx + 1}. ${esc(cur.name)} here` : "All marked"}</button>
+          ${cur ? `<div class="muted" style="font-size:.84rem;margin-top:6px">Starts when: ${esc(cur.breakpoint || "(not written yet: mark where the step starts)")}</div>` : ""}
+        </div>
+        <div class="scroll-x" style="max-height:520px;overflow:auto"><table class="tbl"><thead><tr><th>#</th><th>Element</th><th>Mark</th><th></th></tr></thead><tbody>
+          ${els.map((e, i) => `<tr data-ci="${i}" style="cursor:pointer;${i === calIdx ? "background:var(--soft)" : ""}"><td>${i + 1}</td><td>${esc(e.name)}<div class="muted" style="font-size:.75rem">${esc(e.breakpoint || "")}</div></td>
+            <td class="num">${calMarks[e.id] != null ? fmtT(calMarks[e.id]) : '<span class="muted">–</span>'}</td>
+            <td>${calMarks[e.id] != null ? `<button class="iconbtn" data-cclr="${e.id}" aria-label="Clear mark" style="width:26px;height:26px">${ICON.x}</button>` : ""}</td></tr>`).join("")}
+        </tbody></table></div>
+      </div></section>`;
+  }
+  const thumbs = r => els.filter(e => r.marks[e.id] != null).map(e => `<figure style="margin:0;flex:none;width:112px"><img src="/api/stations/${stationKey()}/reference/${r.rid}/${e.id}.jpg?v=${chartVer}" alt="" style="width:112px;border-radius:8px;display:block"><figcaption style="font-size:.7rem;color:var(--muted)">${els.indexOf(e) + 1}. ${esc(e.name)}</figcaption></figure>`).join("");
+  const byCycle = {};
+  (rep?.rows || []).forEach(r => (byCycle[r.cycle] = byCycle[r.cycle] || []).push(r));
+  return `<section class="card">
+    <div class="chart-head"><div><h2>Teach the exact step starts (optional)</h2>
+      <span class="muted" style="font-size:.84rem">For more exact step timing, play a clean run of the task and mark where each step starts (up to 3 runs). The app then lines every other run up with yours, frame by frame, on this computer, and shows how close it gets to your marks.</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end">${refs.length && CFG.align ? `<button class="btn" id="calAlign" title="No Gemini call, no cost">Re-time from your marks (free)</button>` : ""}
+      <button class="btn ${refs.length ? "" : "primary"}" id="calStart" ${refs.length >= 3 ? "disabled" : ""}>${refs.length ? "Mark another run" : "Mark a run"}</button></div></div>
+    ${S.align_error ? `<div class="warnbox" style="margin-top:8px">Re-timing failed: ${esc(S.align_error)}</div>` : ""}
+    ${refs.map(r => `<div style="border-top:1px solid var(--line-2);padding:10px 0">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-weight:500">Run starting ${fmtT(r.cycle_start)} · lesson ${esc(String(r.study_number ?? ""))} · ${Object.keys(r.marks).length} of ${els.length} marked</b>
+        ${r.legacy ? "" : `<span><button class="btn text" data-redo="${r.rid}">Re-mark</button><button class="btn text" data-delref="${r.rid}">Remove</button></span>`}</div>
+      <div style="display:flex;gap:8px;overflow-x:auto;padding-top:6px">${thumbs(r)}</div></div>`).join("")}
+    ${rep ? calReport(rep, els) : ""}
+  </section>`;
+}
+function calReport(rep, els) {
+  const line = (label, st) => st && st.compared ? `<li>${label}: mean error <b>${st.mae} s</b>, ${st.within_0_5} of ${st.compared} within 0.5 s, ${st.within_1} within 1 s</li>` : "";
+  const two = rep.aligned !== undefined;
+  const err = v => v == null ? "–" : `<span style="${Math.abs(v) > 1 ? "color:var(--err);font-weight:600" : ""}">${v > 0 ? "+" : ""}${(+v).toFixed(1)}</span>`;
+  const used = r => !two ? "" : (rep.choice?.[r.element_id] === "gemini" ? "Gemini" : "Alignment");
+  return `<div class="${rep.mae != null && rep.mae <= 0.5 ? "okbox" : "warnbox"}" style="margin-top:10px">Accuracy on your marked cycle(s), timed blind:
+      <ul style="margin:6px 0 0 18px;padding:0">${two ? line("Gemini", rep.gemini) + line("Alignment", rep.aligned) + line("Used (better one per element)", rep) : line("Gemini", rep)}</ul></div>
+    <div class="scroll-x"><table class="tbl" style="margin-top:8px"><thead><tr><th>Cycle</th><th>#</th><th>Element</th><th class="num">Your mark</th><th class="num">Gemini</th>${two ? '<th class="num">Error</th><th class="num">Alignment</th><th class="num">Error</th><th>Used</th>' : '<th class="num">Error (s)</th>'}</tr></thead><tbody>
+    ${(rep.rows || []).map(r => `<tr><td>${r.cycle ?? ""}</td><td>${els.findIndex(e => e.id === r.element_id) + 1}</td><td>${esc((els.find(e => e.id === r.element_id) || {}).name || r.element_id)}</td><td class="num">${r.marked != null ? fmtT(r.marked) : "–"}</td>
+      <td class="num">${r.gemini != null ? fmtT(r.gemini) : "–"}</td>${two ? `<td class="num">${err(r.error_gemini)}</td><td class="num">${r.aligned != null ? fmtT(r.aligned) : "–"}</td><td class="num">${err(r.error_aligned)}</td><td>${used(r)}</td>` : `<td class="num">${err(r.error)}</td>`}</tr>`).join("")}</tbody></table></div>`;
+}
+function bindCalibration() {
+  const al = document.getElementById("calAlign");
+  if (al) al.onclick = async () => {
+    if (tplDirty && !(await saveTemplate())) return;
+    try { await api(`/api/studies/${S.id}/align`, {method: "POST"}); const id = S.id; S = null; openStudy(id); } catch (e) { toast(e.message); }
+  };
+  const start = document.getElementById("calStart");
+  const marked = (STPL.references || []).filter(r => r.study_id === S.id).map(r => r.cycle_start);
+  const isMarked = c => marked.some(t => Math.abs(t - c.start) <= 3);
+  if (start) start.onclick = () => {
+    calMode = true; calIdx = 0; calMarks = {};
+    const normal = S.cycles.filter(c => !c.abnormal && !c.x_suggested && !isMarked(c));
+    calCycle = (normal.find(c => c.index === S.representative_cycle) || normal[0] || S.cycles[0]).index;
+    renderTemplateTab();
+  };
+  document.querySelectorAll("[data-redo]").forEach(b => b.onclick = () => {
+    const r = STPL.references.find(x => x.rid === b.dataset.redo); if (!r) return;
+    if (r.study_id !== S.id) { toast(`That cycle is from study #${r.study_number}. Open that study to re-mark it.`); return; }
+    const c = S.cycles.find(x => Math.abs(x.start - r.cycle_start) <= 3) || S.cycles[0];
+    calMode = true; calIdx = 0; calMarks = {...r.marks}; calCycle = c.index; renderTemplateTab();
+  });
+  document.querySelectorAll("[data-delref]").forEach(b => b.onclick = async () => {
+    if (!confirm("Remove this reference cycle?")) return;
+    try { const j = await (await api(`/api/stations/${stationKey()}/reference/${b.dataset.delref}`, {method: "DELETE"})).json(); STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; renderTemplateTab(); } catch (e) { toast(e.message); }
+  });
+  if (!calMode) return;
+  const v = document.getElementById("calVid"), now = document.getElementById("calNow");
+  const cyc = () => S.cycles.find(c => c.index === calCycle);
+  v.playbackRate = 0.5;
+  v.addEventListener("loadedmetadata", () => { const e = STPL.elements[calIdx]; v.currentTime = calMarks[e?.id] ?? cyc().start; }, {once: true});
+  v.addEventListener("timeupdate", () => now.textContent = fmtT(v.currentTime));
+  document.getElementById("calSpeed").onchange = e => v.playbackRate = +e.target.value;
+  document.querySelectorAll("[data-step]").forEach(b => b.onclick = () => { v.pause(); v.currentTime = Math.max(0, v.currentTime + +b.dataset.step); });
+  document.getElementById("calCyc").onchange = e => {
+    calCycle = +e.target.value; calIdx = 0;
+    const r = (STPL.references || []).find(x => x.study_id === S.id && Math.abs(x.cycle_start - cyc().start) <= 3);
+    calMarks = r ? {...r.marks} : {}; renderTemplateTab();
+  };
+  const mark = () => {
+    const e = STPL.elements[calIdx]; if (!e) return;
+    const t = Math.round(v.currentTime * 100) / 100;
+    const prev = STPL.elements.slice(0, calIdx).map(x => calMarks[x.id]).filter(x => x != null).pop();
+    if (prev != null && t < prev) { toast("This mark is earlier than the previous element's mark."); return; }
+    calMarks[e.id] = t; calIdx = Math.min(STPL.elements.length, calIdx + 1);
+    const keep = v.currentTime; renderTemplateTab();
+    const nv = document.getElementById("calVid"); if (nv) nv.addEventListener("loadedmetadata", () => nv.currentTime = keep, {once: true});
+  };
+  document.getElementById("calMark").onclick = mark;
+  document.querySelectorAll("[data-ci]").forEach(r => r.onclick = ev => {
+    if (ev.target.closest("[data-cclr]")) return;
+    calIdx = +r.dataset.ci; const e = STPL.elements[calIdx];
+    const keep = calMarks[e.id] ?? v.currentTime; renderTemplateTab();
+    const nv = document.getElementById("calVid"); if (nv) nv.addEventListener("loadedmetadata", () => nv.currentTime = keep, {once: true});
+  });
+  document.querySelectorAll("[data-cclr]").forEach(b => b.onclick = () => { delete calMarks[b.dataset.cclr]; renderTemplateTab(); });
+  document.getElementById("calCancel").onclick = () => { calMode = false; renderTemplateTab(); };
+  document.getElementById("calSave").onclick = async () => {
+    if (!Object.keys(calMarks).length) { toast("Mark at least one break point."); return; }
+    try {
+      const j = await (await api(`/api/stations/${stationKey()}/reference`, jsonBody("POST", {study_id: S.id, cycle_start: cyc().start, marks: calMarks}))).json();
+      STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; calMode = false; chartVer = Date.now();
+      toast("Reference cycle saved. Mark another, or re-analyze to use them."); renderTemplateTab();
+    } catch (e) { toast(`Not saved: ${e.message}`); }
+  };
+}
+document.addEventListener("keydown", e => {
+  if (!calMode || curTab !== "template" || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  const v = document.getElementById("calVid"); if (!v) return;
+  if (e.key === "m" || e.key === "M") { e.preventDefault(); document.getElementById("calMark")?.click(); }
+  else if (e.key === " ") { e.preventDefault(); v.paused ? v.play().catch(() => {}) : v.pause(); }
+  else if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); v.pause(); v.currentTime = Math.max(0, v.currentTime + (e.key === "ArrowRight" ? 1 : -1) * (e.shiftKey ? 1 : 0.1)); }
+});
+
+/* ------------------------------------------------------------ editing: study details */
+function openDetails() {
+  const h = S.header || {}, el = document.getElementById("detailsPanel");
+  if (!el) return;
+  if (!el.hidden) { el.hidden = true; return; }
+  const f = (k, label, type = "text") => `<label class="f">${label}<input type="${type}" data-h="${k}" value="${esc(h[k] || "")}"></label>`;
+  el.innerHTML = `<section class="card" style="margin-bottom:14px">
+    <div class="chart-head"><h2>Study details</h2><div style="display:flex;gap:8px"><button class="btn" id="dtCancel">Cancel</button><button class="btn primary" id="dtSave">Save details</button></div></div>
+    <div class="grid4">${f("job", "Job")}${f("takt", "Takt time (s)")}${f("operator", "Operator")}${f("prepared_by", "Prepared by")}
+      ${f("date", "Date", "date")}${f("shift", "Shift")}${f("swip", "SWIP quantity")}${f("product", "Product")}</div>
+    <p class="muted" style="font-size:.8rem;margin:8px 0 0">Line/Operation (${esc(h.line || "–")}) names the station template, so it is not edited here.</p></section>`;
+  el.hidden = false;
+  document.getElementById("dtCancel").onclick = () => el.hidden = true;
+  document.getElementById("dtSave").onclick = async () => {
+    el.querySelectorAll("[data-h]").forEach(i => S.header[i.dataset.h] = i.value.trim());
+    dirty = true;
+    if (await save()) { chartVer = Date.now(); renderStudyShell(); }
+  };
+}
+
+/* ------------------------------------------------------------ editing: step times per cycle */
+let timeEdit = false, teCycle = null, teSel = 0;
+const tplEls = () => STPL?.elements || [];
+function cycleReadings(ci) {
+  const steps = S.steps.filter(s => s.cycle === ci);
+  return tplEls().map(e => { const st = steps.find(s => s.element_id === e.id); return st ? st.start : null; });
+}
+function applyReadings(ci, times) {
+  const c = cycleOf(ci), els = tplEls(), old = S.steps.filter(s => s.cycle === ci), out = [];
+  els.forEach((e, i) => {
+    const t = times[i]; if (t == null) return;
+    let j = i + 1; while (j < els.length && times[j] == null) j++;
+    const end = j < els.length ? times[j] : c.end;
+    const prev = old.find(s => s.element_id === e.id);
+    const base = prev || {id: newId("s"), element_id: e.id, cycle: ci, title: e.name, breakpoint: e.breakpoint || "", description: "",
+      category: e.category || "necessary_nva", hand: e.hand || "both", tools: [], materials: [], key_points: [], transcript: [],
+      location_id: e.location_id || "", walk: !!e.walk, confidence: "high", edited: false};
+    const changed = !prev || Math.abs(prev.start - t) > 0.004;
+    out.push({...base, start: Math.round(t * 100) / 100, end: Math.round(end * 100) / 100, covers_gap: j > i + 1,
+              edited: base.edited || changed, confidence: changed ? "high" : base.confidence});
+  });
+  if (times[0] != null) c.start = Math.round(times[0] * 100) / 100;
+  S.steps = [...S.steps.filter(s => s.cycle !== ci), ...out];
+}
+function setReading(i, t) {
+  const times = cycleReadings(teCycle), c = cycleOf(teCycle);
+  if (t != null) {
+    const before = times.slice(0, i).filter(x => x != null).pop(), after = times.slice(i + 1).find(x => x != null);
+    const prevCycle = S.cycles.filter(x => x.end <= c.start + 0.01 && x.index !== c.index).sort((a, b) => b.end - a.end)[0];
+    const lo = before ?? (i === 0 ? (prevCycle ? prevCycle.end : 0) : c.start), hi = after ?? c.end;
+    if (t <= lo + 0.04 || t >= hi - 0.04) { toast(`Must be between ${fmtT(lo)} and ${fmtT(hi)} to keep the element order.`); return false; }
+  } else if (i === 0) { toast("The first element starts the cycle; it cannot be blank."); return false; }
+  times[i] = t; applyReadings(teCycle, times); dirty = true; renderBar(); return true;
+}
+function timeEditor() {
+  const els = tplEls(), times = cycleReadings(teCycle), c = cycleOf(teCycle);
+  const cyc = [...S.cycles].sort((a, b) => a.index - b.index);
+  return `<div class="bd-layout">
+    <section class="card">
+      <div class="chart-head"><div><h2>Edit step times</h2><span class="muted" style="font-size:.84rem">Pick a step, find its break point in the video, then <b>Start = playhead</b> (or P). ← → step 0.1 s. Edited times count as checked.</span></div>
+        <div style="display:flex;gap:8px"><button class="btn" id="teDone">Done</button>${dirty ? '<button class="btn primary" id="teSave">Save changes</button>' : ""}</div></div>
+      <label class="f" style="max-width:320px;margin-bottom:8px">Cycle<select id="teCyc">${cyc.map(x => `<option value="${x.index}" ${x.index === teCycle ? "selected" : ""}>Cycle ${x.index} · ${mmss(x.start)}–${mmss(x.end)}${x.abnormal ? " · X" : ""}</option>`).join("")}</select></label>
+      <div class="scroll-x"><table class="tbl bd-tbl"><thead><tr><th class="num">#</th><th>Element</th><th class="num">Start</th><th class="num">Time (s)</th><th></th></tr></thead><tbody>
+        ${els.map((e, i) => {
+          let j = i + 1; while (j < els.length && times[j] == null) j++;
+          const dur = times[i] == null ? null : rdur(times[i], j < els.length ? times[j] : c.end);
+          const st = S.steps.find(s => s.cycle === teCycle && s.element_id === e.id);
+          return `<tr data-te="${i}" class="${i === teSel ? "sel" : ""}"><td class="num"><b style="font-weight:600">${i + 1}</b></td>
+            <td>${esc(e.name)}<div class="muted" style="font-size:.75rem">${esc(e.breakpoint || "")}</div></td>
+            <td class="num">${times[i] == null ? '<span class="muted">not visible</span>' : fmtT(times[i])}${st?.edited ? ' <span class="chip" title="Edited">✓</span>' : ""}</td>
+            <td class="num">${dur == null ? "" : fmtS(dur) + (j > i + 1 ? "?" : "")}</td>
+            <td style="white-space:nowrap"><button class="btn" data-teset="${i}" style="padding:4px 10px">Start = playhead</button>
+              <button class="iconbtn" data-tenudge="${i}" data-d="-0.1" title="−0.1 s" style="width:30px;height:30px">−</button><button class="iconbtn" data-tenudge="${i}" data-d="0.1" title="+0.1 s" style="width:30px;height:30px">+</button>
+              ${i > 0 ? `<button class="iconbtn" data-teclr="${i}" title="Not visible" style="width:30px;height:30px">${ICON.x}</button>` : ""}</td></tr>`;
+        }).join("")}
+      </tbody></table></div>
+    </section>
+    <section class="card sticky">
+      <div class="chart-head"><h2 id="teTitle">Step ${teSel + 1}: ${esc(els[teSel]?.name || "")}</h2></div>
+      <video id="teVid" src="/api/studies/${S.id}/video" preload="auto" muted playsinline controls></video>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <button class="btn" data-tstep="-1">−1 s</button><button class="btn" data-tstep="-0.1">−0.1</button>
+        <span class="chip" id="teNow" style="font-variant-numeric:tabular-nums">0:00.0</span>
+        <button class="btn" data-tstep="0.1">+0.1</button><button class="btn" data-tstep="1">+1 s</button>
+        <label class="speed">Speed <select id="teSpeed">${[0.25, 0.5, 1].map(v => `<option value="${v}" ${v === 0.5 ? "selected" : ""}>${v}x</option>`).join("")}</select></label>
+      </div>
+    </section></div>`;
+}
+function bindTimeEditor() {
+  const v = document.getElementById("teVid"), now = document.getElementById("teNow");
+  const keepTime = t => { const nv = document.getElementById("teVid"); if (nv) nv.addEventListener("loadedmetadata", () => nv.currentTime = t, {once: true}); };
+  const seekSel = () => { const t = cycleReadings(teCycle)[teSel]; v.currentTime = t ?? cycleOf(teCycle).start; };
+  v.playbackRate = 0.5;
+  v.addEventListener("loadedmetadata", seekSel, {once: true});
+  v.addEventListener("timeupdate", () => now.textContent = fmtT(v.currentTime));
+  document.getElementById("teSpeed").onchange = e => v.playbackRate = +e.target.value;
+  document.querySelectorAll("[data-tstep]").forEach(b => b.onclick = () => { v.pause(); v.currentTime = Math.max(0, v.currentTime + +b.dataset.tstep); });
+  document.getElementById("teCyc").onchange = e => { teCycle = +e.target.value; teSel = 0; renderBreakdown(); };
+  document.getElementById("teDone").onclick = () => { timeEdit = false; renderBreakdown(); };
+  const sv = document.getElementById("teSave"); if (sv) sv.onclick = async () => { if (await save()) renderBreakdown(); };
+  document.querySelectorAll("[data-te]").forEach(r => r.onclick = ev => {
+    if (ev.target.closest("button")) return;
+    teSel = +r.dataset.te; document.querySelectorAll("[data-te]").forEach(x => x.classList.toggle("sel", +x.dataset.te === teSel));
+    document.getElementById("teTitle").textContent = `Step ${teSel + 1}: ${tplEls()[teSel].name}`; seekSel();
+  });
+  const redo = t => { renderBreakdown(); keepTime(t); };
+  document.querySelectorAll("[data-teset]").forEach(b => b.onclick = () => { teSel = +b.dataset.teset; const t = v.currentTime; if (setReading(teSel, Math.round(t * 100) / 100)) redo(t); });
+  document.querySelectorAll("[data-tenudge]").forEach(b => b.onclick = () => {
+    const i = +b.dataset.tenudge, cur = cycleReadings(teCycle)[i]; if (cur == null) return;
+    teSel = i; const t = Math.round((cur + +b.dataset.d) * 100) / 100; if (setReading(i, t)) redo(t);
+  });
+  document.querySelectorAll("[data-teclr]").forEach(b => b.onclick = () => { teSel = +b.dataset.teclr; const t = v.currentTime; if (setReading(teSel, null)) redo(t); });
+}
+document.addEventListener("keydown", e => {
+  if (!timeEdit || curTab !== "breakdown" || /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+  const v = document.getElementById("teVid"); if (!v) return;
+  if (e.key === "p" || e.key === "P") { e.preventDefault(); document.querySelector(`[data-teset="${teSel}"]`)?.click(); }
+  else if (e.key === " ") { e.preventDefault(); v.paused ? v.play().catch(() => {}) : v.pause(); }
+  else if (e.key === "ArrowLeft" || e.key === "ArrowRight") { e.preventDefault(); v.pause(); v.currentTime = Math.max(0, v.currentTime + (e.key === "ArrowRight" ? 1 : -1) * (e.shiftKey ? 1 : 0.1)); }
+});
+
+/* ------------------------------------------------------------ editing: work chart */
+let chartEdit = false;
+function chartEditor() {
+  const T = STPL;
+  return `<section class="card" style="margin-top:14px">
+    <div class="chart-head"><div><h2>Edit work chart</h2><span class="muted" style="font-size:.84rem">Change a step's place, order, quality ◇ / safety ⊕ marks or walking; drag places on the layout. Saved to the station template, so every study of this station uses it.</span></div>
+      <div style="display:flex;gap:8px"><button class="btn" id="ceDone">Done</button><button class="btn primary" id="tplSave" ${tplDirty ? "" : "disabled"}>Save chart</button></div></div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px">
+      <div class="scroll-x" style="max-height:560px;overflow:auto"><table class="tbl loc-tbl"><thead><tr><th>#</th><th>Step</th><th>Place</th><th title="Quality check">◇</th><th title="Safety">⊕</th><th>Walk</th><th></th></tr></thead><tbody>
+        ${T.elements.map((e, i) => `<tr><td class="lid">${i + 1}</td><td style="min-width:150px">${esc(e.name)}</td>
+          <td><select data-ce="${i}" data-f="location_id" aria-label="Place of step ${i + 1}"><option value="">–</option>${T.layout.map(l => `<option value="${esc(l.id)}" ${l.id === e.location_id ? "selected" : ""}>${esc(l.label)}</option>`).join("")}</select></td>
+          <td><input type="checkbox" data-ce="${i}" data-f="quality" ${e.quality ? "checked" : ""} aria-label="Quality check at step ${i + 1}"></td>
+          <td><input type="checkbox" data-ce="${i}" data-f="safety" ${e.safety ? "checked" : ""} aria-label="Safety point at step ${i + 1}"></td>
+          <td><input type="checkbox" data-ce="${i}" data-f="walk" ${e.walk ? "checked" : ""} aria-label="Walk to step ${i + 1}"></td>
+          <td style="white-space:nowrap"><button class="iconbtn" data-cemv="${i}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="Up" style="width:26px;height:26px">${ICON.up}</button><button class="iconbtn" data-cemv="${i}" data-d="1" ${i === T.elements.length - 1 ? "disabled" : ""} aria-label="Down" style="width:26px;height:26px">${ICON.down}</button></td></tr>`).join("")}
+      </tbody></table></div>
+      <div><div id="layoutEd" style="background:#fbfcfe;border:1px solid var(--line-2);border-radius:14px;touch-action:none"></div>
+        <div id="locPanel" class="stack" style="gap:8px;margin-top:10px"></div>
+        <button class="btn" id="addLoc" style="margin-top:8px">Add place</button></div>
+    </div></section>`;
+}
+function bindChartEditor() {
+  const T = STPL;
+  const mark = () => { tplDirty = true; const b = document.getElementById("tplSave"); if (b) b.disabled = false; };
+  document.querySelectorAll("[data-ce]").forEach(el => el.onchange = () => {
+    const e = T.elements[+el.dataset.ce], f = el.dataset.f;
+    e[f] = el.type === "checkbox" ? el.checked : el.value;
+    if (f === "location_id") e.location_suggested = false;
+    mark();
+  });
+  document.querySelectorAll("[data-cemv]").forEach(b => b.onclick = () => { const i = +b.dataset.cemv, j = i + +b.dataset.d; [T.elements[i], T.elements[j]] = [T.elements[j], T.elements[i]]; tplDirty = true; renderChartTab(); });
+  document.getElementById("addLoc").onclick = () => { let n = T.layout.length + 1; while (T.layout.some(l => l.id === `L${n}`)) n++; const w = STPL_GRID?.width || 4; T.layout.push({id: `L${n}`, label: "New place", type: "bench", column: "center", row: "middle", shelf: null, order: 9, x: w / 2, y: 1}); tplSel = `L${n}`; tplDirty = true; renderChartTab(); };
+  document.getElementById("tplSave").onclick = saveTemplate;
+  document.getElementById("ceDone").onclick = async () => { if (tplDirty && !confirm("Leave without saving the chart changes?")) return; if (tplDirty) { await loadTemplate(); } chartEdit = false; renderChartTab(); };
+  drawLayoutEditor();
+}
+
+/* ------------------------------------------------------------ tab: station template */
+function renderTemplateTab() {
+  const body = document.getElementById("tabBody");
+  const key = stationKey();
+  if (!key) { body.innerHTML = `<section class="card"><h2>No workplace set</h2><p class="muted">A station template belongs to a workplace. Add the video again with "Where is it done?" filled in.</p></section>`; return; }
+  if (!STPL) {
+    body.innerHTML = `<section class="card stack" style="gap:10px"><h2>No template for ${esc(S.header?.line || key)} yet</h2>
+      <p class="muted" style="margin:0">Import a photo of a paper step sheet to start from your own steps, in your own words.</p>
+      <div><label class="btn primary">Import a step sheet photo<input type="file" accept="image/*" id="impFile" hidden></label></div></section>`;
+    document.getElementById("impFile").onchange = e => importSheet(e.target.files[0]);
+    return;
+  }
+  const T = STPL, locIds = T.layout.map(l => l.id);
+  const used = id => T.elements.some(e => e.location_id === id);
+  body.innerHTML = `
+  <div class="stack">
+    <section class="card">
+      <div class="chart-head"><div><h2>Station template · ${esc(T.line || S.header?.line || key)}</h2>
+        <span class="muted" style="font-size:.9rem">The steps for this workplace, in your words and your order. Every new video of this station is split into these steps, and the map uses these places.</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          ${T.elements.some(e => !(e.breakpoint || "").trim()) ? '<button class="btn text" id="draftBp">Fill in missing start points</button>' : ""}
+          ${T.elements.some(e => e.location_suggested && e.location_id) ? '<button class="btn text" id="confirmLoc">Accept guessed places</button>' : ""}
+          <label class="btn">Import a step sheet photo<input type="file" accept="image/*" id="impFile" hidden></label>
+          <button class="btn primary" id="tplSave" ${tplDirty ? "" : "disabled"}>Save template</button>
+        </div></div>
+      <div class="scroll-x"><table class="tbl loc-tbl tpl-tbl"><colgroup><col style="width:34px"><col style="width:27%"><col style="width:29%"><col style="width:21%"><col style="width:92px"><col style="width:46px"><col style="width:46px"><col style="width:46px"><col style="width:92px"></colgroup>
+        <thead><tr><th>#</th><th>Step</th><th>Starts when (what you can see)</th><th>Place</th><th>Hands</th><th title="The worker walks or reaches far for this step">Walk</th><th title="Check your work here">Check</th><th title="Take care here">Care</th><th></th></tr></thead><tbody>
+        ${T.elements.map((e, i) => `<tr>
+          <td class="lid">${i + 1}</td>
+          <td><input type="text" data-e="${i}" data-f="name" value="${esc(e.name)}" title="${esc(e.name)}" aria-label="Step ${i + 1}"></td>
+          <td><input type="text" data-e="${i}" data-f="breakpoint" value="${esc(e.breakpoint || "")}" title="${esc(e.breakpoint || "")}" aria-label="Step ${i + 1} starts when" placeholder="e.g. hand touches the part" class="${!e.breakpoint || e.breakpoint_suggested ? "guess" : ""}" title="${e.breakpoint_suggested ? "Written by the app from the step name: change it if it is wrong" : esc(e.breakpoint || "")}"></td>
+          <td><select data-e="${i}" data-f="location_id" aria-label="Step ${i + 1} place" class="${e.location_suggested ? "guess" : ""}" title="${e.location_suggested ? "Guessed from the video: pick a place to confirm" : ""}"><option value="">–</option>${T.layout.map(l => `<option value="${esc(l.id)}" ${l.id === e.location_id ? "selected" : ""}>${esc(l.label)}</option>`).join("")}</select></td>
+          <td><select data-e="${i}" data-f="hand" aria-label="Step ${i + 1} hands">${opts([["R", "Right"], ["L", "Left"], ["both", "Both"]], e.hand)}</select></td>
+          <td><input type="checkbox" data-e="${i}" data-f="walk" ${e.walk ? "checked" : ""} aria-label="Step ${i + 1}: walk or reach far"></td>
+          <td><input type="checkbox" data-e="${i}" data-f="quality" ${e.quality ? "checked" : ""} aria-label="Step ${i + 1}: check your work here"></td>
+          <td><input type="checkbox" data-e="${i}" data-f="safety" ${e.safety ? "checked" : ""} aria-label="Step ${i + 1}: take care here"></td>
+          <td style="white-space:nowrap"><button class="iconbtn" data-mv="${i}" data-d="-1" ${i === 0 ? "disabled" : ""} aria-label="Move step ${i + 1} up" style="width:28px;height:28px">${ICON.up}</button><button class="iconbtn" data-mv="${i}" data-d="1" ${i === T.elements.length - 1 ? "disabled" : ""} aria-label="Move step ${i + 1} down" style="width:28px;height:28px">${ICON.down}</button><button class="iconbtn" data-rme="${i}" aria-label="Remove step ${i + 1}" style="width:28px;height:28px">${ICON.x}</button></td></tr>`).join("")}
+      </tbody></table></div>
+      <button class="btn" id="addEl" style="margin-top:10px">Add a step</button>
+    </section>
+    <section class="card">
+      <div class="chart-head"><div><h2>Workspace layout</h2><span class="muted" style="font-size:.9rem">Seen from above, from where the worker stands. Drag a place to move it. Drop a bin on another bin to stack them, then set the shelf. Click a place to rename it.</span></div>
+        <button class="btn" id="addLoc">Add place</button></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:14px">
+        <div id="layoutEd" style="background:#fbfcfe;border:1px solid var(--line-2);border-radius:14px;touch-action:none"></div>
+        <div id="locPanel" class="stack" style="gap:8px"></div>
+      </div>
+    </section>
+    ${learnedCard()}
+    ${calibrationCard()}
+    <section class="card">
+      <div class="chart-head"><h2>Map from this template</h2><button class="btn" id="reBtn">Prepare this lesson again with the template</button></div>
+      <div class="chart-img"><img alt="Map of the workspace drawn from this template" src="/api/stations/${key}/chart.svg?v=${chartVer}"></div>
+    </section>
+  </div>`;
+  const mark = () => { tplDirty = true; document.getElementById("tplSave").disabled = false; };
+  body.querySelectorAll("[data-e]").forEach(el => el.addEventListener(el.type === "checkbox" || el.tagName === "SELECT" ? "change" : "input", () => {
+    const e = T.elements[+el.dataset.e], f = el.dataset.f;
+    e[f] = el.type === "checkbox" ? el.checked : el.value;
+    if (f === "breakpoint") { e.breakpoint_visible = !!el.value.trim(); e.issue = ""; e.breakpoint_suggested = false; }
+    if (f === "location_id") e.location_suggested = false;
+    mark();
+  }));
+  body.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { const i = +b.dataset.mv, j = i + +b.dataset.d; [T.elements[i], T.elements[j]] = [T.elements[j], T.elements[i]]; tplDirty = true; renderTemplateTab(); });
+  body.querySelectorAll("[data-rme]").forEach(b => b.onclick = () => { if (confirm(`Remove "${T.elements[+b.dataset.rme].name}"?`)) { T.elements.splice(+b.dataset.rme, 1); tplDirty = true; renderTemplateTab(); } });
+  document.getElementById("addEl").onclick = () => { let n = T.elements.length + 1; while (T.elements.some(e => e.id === `E${n}`)) n++; T.elements.push({id: `E${n}`, name: "New step", breakpoint: "", location_id: "", category: "necessary_nva", hand: "both", walk: false, breakpoint_visible: false, issue: "no break point"}); tplDirty = true; renderTemplateTab(); };
+  document.getElementById("addLoc").onclick = () => { let n = T.layout.length + 1; while (T.layout.some(l => l.id === `L${n}`)) n++; const w = STPL_GRID?.width || 4; T.layout.push({id: `L${n}`, label: "New place", type: "bench", column: "center", row: "middle", shelf: null, order: 9, x: w / 2, y: 1}); tplSel = `L${n}`; tplDirty = true; renderTemplateTab(); };
+  document.getElementById("tplSave").onclick = saveTemplate;
+  document.getElementById("impFile").onchange = e => importSheet(e.target.files[0]);
+  const stAct = (id, path, msg) => { const b = document.getElementById(id); if (b) b.onclick = async () => {
+    if (tplDirty && !(await saveTemplate())) return;
+    try { const j = await (await api(`/api/stations/${key}/${path}`, {method: "POST"})).json(); STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; chartVer = Date.now(); renderTemplateTab(); toast(msg); } catch (e) { toast(e.message); }
+  }; };
+  stAct("draftBp", "draft-breakpoints", "Start points written from the step names");
+  stAct("confirmLoc", "confirm-places", "Places accepted");
+  document.getElementById("reBtn").onclick = async () => { if (tplDirty && !(await saveTemplate())) return; reanalyze(); };
+  drawLayoutEditor();
+  bindCalibration();
+  bindLearned();
+}
+function gridPos(l) {
+  if (l.x != null && l.y != null) return [l.x, l.y];
+  return STPL_GRID?.pos?.[l.id] || [1, 1];
+}
+function bandOf(x) {
+  const b = STPL_GRID?.bands || []; if (!b.length) return "center";
+  return (b.find(z => x >= z.x0 && x < z.x1) || (x < b[0].x0 ? b[0] : b[b.length - 1])).column;
+}
+function drawLayoutEditor() {
+  const T = STPL, ed = document.getElementById("layoutEd"); if (!ed) return;
+  const width = Math.max(STPL_GRID?.width || 4, ...T.layout.map(l => gridPos(l)[0] + 0.6));
+  const vb = [-0.95, -0.65, width + 1.35, 3.9];
+  // labels: first free spot of below / above / right / left, so no label covers another label or a place
+  const LBL = l => ((l.shelf ? l.shelf[0].toUpperCase() + ": " : "") + l.label);
+  const TXT = l => LBL(l).slice(0, 18) + (LBL(l).length > 18 ? "…" : "");
+  const firsts = [];
+  T.layout.forEach(l => { const [x, y] = gridPos(l); const g = firsts.find(f => Math.abs(f.x - x) < 0.01 && Math.abs(f.y - y) < 0.01); if (g) g.n++; else firsts.push({l, x, y, n: 1}); });
+  const boxes = firsts.map(f => f.l.type === "bin" ? [f.x - 0.2, f.y - 0.2, f.x + 0.2, f.y + 0.2] : [f.x - 0.26, f.y - 0.16, f.x + 0.26, f.y + 0.16]);
+  const hit = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+  const lpos = {};
+  firsts.slice().sort((a, b) => a.y - b.y || a.x - b.x).forEach(f => {
+    const nUse = T.elements.filter(e => e.location_id === f.l.id).length;
+    const w = (TXT(f.l).length + (nUse ? 4 : 0)) * 0.058 + 0.04, h = 0.13 * f.n;
+    const hy = f.l.type === "bin" ? 0.2 : 0.16, hx = f.l.type === "bin" ? 0.2 : 0.26;
+    const cands = [
+      {dx: 0, dy: hy + 0.13, anchor: "middle", box: [f.x - w / 2, f.y + hy + 0.03, f.x + w / 2, f.y + hy + 0.03 + h]},
+      {dx: 0, dy: -hy - 0.05 - (f.n - 1) * 0.13, anchor: "middle", box: [f.x - w / 2, f.y - hy - 0.03 - h, f.x + w / 2, f.y - hy - 0.03]},
+      {dx: hx + 0.05, dy: 0.04, anchor: "start", box: [f.x + hx + 0.03, f.y - 0.07, f.x + hx + 0.03 + w, f.y - 0.07 + h]},
+      {dx: -hx - 0.05, dy: 0.04, anchor: "end", box: [f.x - hx - 0.03 - w, f.y - 0.07, f.x - hx - 0.03, f.y - 0.07 + h]},
+    ];
+    const own = [f.l.type === "bin" ? f.x - 0.2 : f.x - 0.26, f.y - hy, f.x + hx, f.y + hy];
+    const pick = cands.find(c => !boxes.some(b => b !== own && hit(c.box, b) && !(b[0] === own[0] && b[1] === own[1]))) || cands[0];
+    boxes.push(pick.box);
+    lpos[f.l.id] = pick;
+  });
+  const bands = STPL_GRID?.bands || [];
+  const byPos = {};
+  T.layout.forEach(l => { const [x, y] = gridPos(l); const k = `${x.toFixed(2)},${y.toFixed(2)}`; (byPos[k] = byPos[k] || []).push(l); });
+  ed.innerHTML = `<svg viewBox="${vb.join(" ")}" style="width:100%;height:auto;display:block" id="edSvg">
+    ${bands.map((b, i) => `<rect x="${b.x0}" y="-0.5" width="${b.x1 - b.x0}" height="3" fill="${i % 2 ? "#f1f5fb" : "#ffffff"}"/><text x="${(b.x0 + b.x1) / 2}" y="-0.55" font-size="0.12" text-anchor="middle" fill="#5f6368">${LOC_COLS.find(c => c[0] === b.column)[1]}</text>`).join("")}
+    ${[0, 1, 2].map(r => `<line x1="-0.9" x2="${width + 0.3}" y1="${r + 0.5}" y2="${r + 0.5}" stroke="#dbe3ee" stroke-width="0.01" stroke-dasharray="0.04 0.04"/><text x="-0.9" y="${r + 0.04}" font-size="0.11" font-weight="600" fill="#5f6368">${["Back", "Middle", "Front"][r]}</text>`).join("")}
+    <circle cx="${width / 2}" cy="2.95" r="0.13" fill="#e8eef8" stroke="#1f1f1f" stroke-width="0.015"/><text x="${width / 2}" y="3.18" font-size="0.1" text-anchor="middle">You</text>
+    ${Object.values(byPos).map(group => group.map((l, gi) => {
+      const [x, y] = gridPos(l), sel = tplSel === l.id, col = sel ? "#0b57d0" : "#3c4043";
+      const shape = gi > 0 ? "" : (l.type === "bin" ? `<circle r="0.2" fill="#c9ced6" stroke="${col}" stroke-width="${sel ? 0.03 : 0.015}"/>` :
+        `<rect x="-0.26" y="-0.16" width="0.52" height="0.32" fill="#fff" stroke="${col}" stroke-width="${sel ? 0.03 : 0.015}" ${l.type === "output" ? 'stroke-dasharray="0.05 0.03"' : ""}/>${l.type === "equipment" ? `<path d="M-0.26 -0.16 L0.26 0.16 M-0.26 0.16 L0.26 -0.16" stroke="${col}" stroke-width="0.012"/>` : ""}`);
+      const nUse = T.elements.filter(e => e.location_id === l.id).length;
+      return `<g data-loc="${esc(l.id)}" transform="translate(${x} ${y})" style="cursor:grab">${shape}
+        <text x="${lpos[group[0].id].dx}" y="${lpos[group[0].id].dy + gi * 0.13}" font-size="0.11" text-anchor="${lpos[group[0].id].anchor}" fill="${col}"><title>${esc(l.label)}</title>${esc(TXT(l))}${nUse ? ` (${nUse})` : ""}</text></g>`;
+    }).join("")).join("")}
+  </svg>`;
+  const svg = document.getElementById("edSvg");
+  const pt = e => { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); };
+  let drag = null;
+  svg.querySelectorAll("[data-loc]").forEach(g => {
+    g.onpointerdown = e => { e.preventDefault(); const id = g.dataset.loc; tplSel = id; const l = T.layout.find(x => x.id === id); const p = pt(e); const [x, y] = gridPos(l); drag = {l, dx: x - p.x, dy: y - p.y, moved: false}; svg.setPointerCapture(e.pointerId); };
+  });
+  svg.onpointermove = e => {
+    if (!drag) return; const p = pt(e);
+    const x = Math.max(0, Math.min(width, p.x + drag.dx)), y = Math.max(0, Math.min(2, p.y + drag.dy));
+    drag.moved = true; drag.x = x; drag.y = y;
+    const g = svg.querySelector(`[data-loc="${CSS.escape(drag.l.id)}"]`); if (g) g.setAttribute("transform", `translate(${x} ${y})`);
+  };
+  svg.onpointerup = () => {
+    if (!drag) return;
+    const d = drag; drag = null;
+    if (d.moved) {
+      T.layout.forEach(l => { const [x, y] = gridPos(l); l.x = +x.toFixed(3); l.y = +y.toFixed(3); });  // fix everyone's position
+      let x = Math.round(d.x * 20) / 20, y = Math.round(d.y * 20) / 20;
+      const near = T.layout.find(o => o !== d.l && Math.hypot(o.x - x, o.y - y) < 0.25);
+      if (near) { x = near.x; y = near.y; }  // dropped on another place: stack (bins on shelves)
+      d.l.x = x; d.l.y = y;
+      recomputeCategories();
+      tplDirty = true; document.getElementById("tplSave").disabled = false;
+    }
+    drawLayoutEditor();
+  };
+  drawLocPanel();
+}
+function recomputeCategories() {
+  const T = STPL;
+  T.layout.forEach(l => { l.row = ["back", "middle", "front"][Math.max(0, Math.min(2, Math.round(l.y)))]; l.column = bandOf(l.x); });
+  const cells = {};
+  T.layout.forEach(l => (cells[`${l.column}|${l.row}`] = cells[`${l.column}|${l.row}`] || []).push(l));
+  Object.values(cells).forEach(list => {
+    const xs = [...new Set(list.map(l => l.x.toFixed(2)))].sort((a, b) => a - b);
+    list.forEach(l => l.order = xs.indexOf(l.x.toFixed(2)) + 1);
+  });
+}
+function drawLocPanel() {
+  const T = STPL, el = document.getElementById("locPanel"); if (!el) return;
+  const l = T.layout.find(x => x.id === tplSel);
+  if (!l) { el.innerHTML = `<p class="muted" style="font-size:.84rem;margin:0">Click a place to edit it.</p>`; return; }
+  const users = T.elements.map((e, i) => [i + 1, e]).filter(([, e]) => e.location_id === l.id);
+  el.innerHTML = `<div class="lid">${esc(l.id)}</div>
+    <label class="f">Name<input type="text" id="lpLabel" value="${esc(l.label)}"></label>
+    <label class="f">Type<select id="lpType">${opts(LOC_TYPES.map(t => [t, t]), l.type)}</select></label>
+    <label class="f">Shelf (stacked bins)<select id="lpShelf">${opts(LOC_SHELF, l.shelf || "")}</select></label>
+    <div class="muted" style="font-size:.8rem">${LOC_COLS.find(c => c[0] === l.column)?.[1] || l.column}, ${l.row}${users.length ? ` · used by step ${users.map(u => u[0]).join(", ")}` : " · no step uses it"}</div>
+    <button class="btn" id="lpDel" ${users.length ? "disabled title=\"Move its steps to another place first\"" : ""}>Remove place</button>`;
+  const mark = () => { tplDirty = true; document.getElementById("tplSave").disabled = false; };
+  document.getElementById("lpLabel").oninput = e => { l.label = e.target.value; mark(); };
+  document.getElementById("lpLabel").onchange = () => drawLayoutEditor();
+  document.getElementById("lpType").onchange = e => { l.type = e.target.value; mark(); drawLayoutEditor(); };
+  document.getElementById("lpShelf").onchange = e => { l.shelf = e.target.value || null; mark(); drawLayoutEditor(); };
+  document.getElementById("lpDel").onclick = () => { T.layout = T.layout.filter(x => x !== l); tplSel = null; mark(); renderTemplateTab(); };
+}
+async function saveTemplate() {
+  const T = STPL;
+  const body = {line: T.line || S.header?.line || "", manual: T.manual || {},
+    elements: T.elements.map(e => ({...e, name: (e.name || "").trim() || "Unnamed element", breakpoint: (e.breakpoint || "").trim()})),
+    layout: T.layout.map(l => ({...l, label: (l.label || "").trim() || l.id, order: Math.max(1, Math.min(40, l.order || 1))}))};
+  try {
+    const j = await (await api(`/api/stations/${stationKey()}`, jsonBody("PUT", body))).json();
+    STPL = j.template; STPL_ISSUES = j.issues; STPL_GRID = j.grid; tplDirty = false; chartVer = Date.now();
+    toast("Station template saved"); if (curTab === "template") renderTemplateTab(); else if (curTab === "chart") renderChartTab(); return true;
+  } catch (e) { toast(`Template not saved: ${e.message}`); return false; }
+}
+async function importSheet(file) {
+  if (!file) return;
+  toast("Reading your step sheet…");
+  const fd = new FormData(); fd.append("image", file);
+  try {
+    const r = await (await api(`/api/stations/${stationKey()}/import-sheet`, {method: "POST", body: fd})).json();
+    if (!r.elements.length) { toast("No steps found on the sheet."); return; }
+    if (STPL && STPL.elements.length && !confirm(`Replace the ${STPL.elements.length} template steps with ${r.elements.length} steps read from your sheet?`)) return;
+    STPL = STPL || {line: S.header?.line || "", status: "draft", elements: [], layout: S.layout || [], manual: {}};
+    STPL.elements = r.elements; STPL.manual = r.manual; tplDirty = true;
+    toast(`${r.elements.length} steps read. Check them, set their places, then Save template.`);
+    renderTemplateTab();
+  } catch (e) { toast(`Import failed: ${e.message}`); }
+}
+
+/* ------------------------------------------------------------ line balancing */
+const lineCache = new Map();
+async function showLine() {
+  view.innerHTML = `<div class="status">${SPARK}<p class="muted">Loading stations…</p></div>`;
+  let rows;
+  try { rows = (await (await api("/api/studies")).json()).filter(r => r.status === "ready"); }
+  catch (e) { view.innerHTML = `<div class="status"><p class="err">${esc(e.message)}</p></div>`; return; }
+  const saved = store.get("kc.line", {ids: [], takt: "", basis: "rep"});
+  const ids = saved.ids.filter(id => rows.some(r => r.id === id));
+  const state = {ids, takt: saved.takt, basis: saved.basis || "rep"};
+  const persist = () => store.set("kc.line", state);
+  const nameOf = id => { const r = rows.find(x => x.id === id); const h = r?.header || {}; return h.line || h.job || h.project || `Study #${r?.number}`; };
+  const draw = async () => {
+    persist();
+    for (const id of state.ids) if (!lineCache.has(id)) {
+      try { lineCache.set(id, await (await api(`/api/studies/${id}`)).json()); } catch { state.ids = state.ids.filter(x => x !== id); }
+    }
+    const takt = parseFloat(String(state.takt).replace(",", ".")) || null;
+    const stations = state.ids.map(id => {
+      const st = lineCache.get(id), ss = studyStats(st);
+      const segs = state.basis === "rep"
+        ? ss.repS.map((s, i) => ({v: s.end - s.start, c: COLOR[s.category], cat: s.category, tip: `${esc(nameOf(id))}<br>${i + 1}. ${esc(s.title)}<br>${f1(s.end - s.start)} s · ${CAT_SHORT[s.category]}`}))
+        : ss.elements.filter(e => e.lr).map((e, i) => ({v: e.lr, c: COLOR[e.category], cat: e.category, tip: `${esc(nameOf(id))}<br>${i + 1}. ${esc(e.title)}<br>${e.lr} s (lowest repeatable) · ${CAT_SHORT[e.category]}`}));
+      const total = segs.reduce((a, s) => a + s.v, 0);
+      const byCat = Object.fromEntries(CATS.map(k => [k, segs.filter(s => s.cat === k).reduce((a, s) => a + s.v, 0)]));
+      return {id, name: nameOf(id), segs, total, byCat};
+    });
+    const total = stations.reduce((a, s) => a + s.total, 0), maxS = stations.length ? Math.max(...stations.map(s => s.total)) : 0;
+    const bott = stations.find(s => s.total === maxS);
+    const eff = stations.length && maxS ? total / (stations.length * maxS) * 100 : 0;
+    const body = document.getElementById("lineResult");
+    if (!stations.length) { body.innerHTML = `<section class="card"><p class="muted" style="margin:0">Pick two or more ready studies, one per station, in line order.</p></section>`; return; }
+    body.innerHTML = `
+      <div class="kpis">
+        <div class="kpi"><div class="k">Stations</div><div class="v">${stations.length}</div><div class="d">Total work content ${f1(total)} s</div></div>
+        <div class="kpi"><div class="k">Bottleneck</div><div class="v">${f1(maxS)}<small> s</small></div><div class="d">${esc(bott.name)}${takt ? ` · <span class="state ${maxS > takt ? "bad" : "good"}">${maxS > takt ? "▲ over takt" : "✓ within takt"}</span>` : ""}</div></div>
+        <div class="kpi"><div class="k">Line balance efficiency</div><div class="v">${eff.toFixed(0)}<small> %</small></div><div class="d">Σ station time ÷ (stations × bottleneck)</div></div>
+        <div class="kpi"><div class="k">Operators needed at takt</div><div class="v">${takt ? Math.ceil(total / takt) : "–"}</div><div class="d">${takt ? `Σ ${f1(total)} s ÷ takt ${takt} s = ${(total / takt).toFixed(2)}` : "Enter a takt time"}</div></div>
+        <div class="kpi"><div class="k">Max output</div><div class="v">${maxS ? Math.floor(3600 / maxS) : "–"}<small> /hour</small></div><div class="d">Set by the bottleneck</div></div>
+      </div>
+      <section class="card chart">
+        <div class="chart-head"><h2>Yamazumi</h2>${legend()}</div>
+        ${barChart({items: stations.map(s => ({name: s.name, label: f1(s.total), hot: s === bott && stations.length > 1, segs: s.segs})), max: maxS, ref: takt, refLabel: takt ? `Takt ${takt} s` : ""})}
+        <p class="muted" style="font-size:.8rem;margin:10px 0 0">Each block is one step; hover for details. Outlined bar = bottleneck.</p>
+      </section>
+      <section class="card"><h2>Stations</h2><div class="scroll-x"><table class="tbl"><thead><tr><th>Station</th>${CATS.map(k => `<th class="num">${CAT_SHORT[k]} (s)</th>`).join("")}<th class="num">Total (s)</th><th class="num">vs takt</th></tr></thead><tbody>
+        ${stations.map(s => `<tr><td>${esc(s.name)}${s === bott && stations.length > 1 ? ' <span class="chip">Bottleneck</span>' : ""}</td>${CATS.map(k => `<td class="num">${f1(s.byCat[k])}</td>`).join("")}<td class="num">${f1(s.total)}</td><td class="num">${takt ? (s.total > takt ? `<span class="state bad">+${f1(s.total - takt)}</span>` : `<span class="state good">−${f1(takt - s.total)}</span>`) : ""}</td></tr>`).join("")}
+      </tbody></table></div></section>`;
+    bindTips(body);
+  };
+  const renderPicker = () => {
+    document.getElementById("order").innerHTML = state.ids.length ? state.ids.map((id, i) => `<div><span>${i + 1}. ${esc(nameOf(id))}</span>
+      <button class="iconbtn" data-mv="${i}" data-d="-1" aria-label="Move up" ${i === 0 ? "disabled" : ""}>${ICON.up}</button>
+      <button class="iconbtn" data-mv="${i}" data-d="1" aria-label="Move down" ${i === state.ids.length - 1 ? "disabled" : ""}>${ICON.down}</button>
+      <button class="iconbtn" data-rmv="${i}" aria-label="Remove">${ICON.x}</button></div>`).join("") : `<span class="muted">No stations selected</span>`;
+    document.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { const i = +b.dataset.mv, j = i + +b.dataset.d; [state.ids[i], state.ids[j]] = [state.ids[j], state.ids[i]]; renderPicker(); draw(); });
+    document.querySelectorAll("[data-rmv]").forEach(b => b.onclick = () => { state.ids.splice(+b.dataset.rmv, 1); syncChecks(); renderPicker(); draw(); });
+  };
+  const syncChecks = () => document.querySelectorAll("[data-pick]").forEach(c => c.checked = state.ids.includes(c.dataset.pick));
+  view.innerHTML = `
+  <div class="study-top"><div class="title"><div class="eyebrow">Line</div><h1>Line balancing</h1><div class="sub">Each study is one station. Compare them against takt to find the bottleneck and rebalance.</div></div></div>
+  <div class="stack">
+    <section class="card" style="display:grid;grid-template-columns:1fr 1fr 260px;gap:18px">
+      <div><h2 style="font-size:.95rem">Studies</h2>${rows.length ? `<div class="picker">${rows.map(r => `<label><input type="checkbox" data-pick="${r.id}" ${state.ids.includes(r.id) ? "checked" : ""}> #${r.number ?? "–"} ${esc(nameOf(r.id))}<span class="muted" style="font-size:.8rem">${esc(r.header.project || "")}</span></label>`).join("")}</div>` : `<p class="muted">No ready studies yet.</p>`}</div>
+      <div><h2 style="font-size:.95rem">Line order</h2><div class="order" id="order"></div></div>
+      <div style="display:grid;gap:12px;align-content:start">
+        <label class="f">Takt time (s)<input type="text" id="takt" inputmode="decimal" value="${esc(state.takt)}" placeholder="e.g. 90"></label>
+        <label class="f">Station time from<select id="basis"><option value="rep" ${state.basis === "rep" ? "selected" : ""}>Instruction cycle (as observed)</option><option value="lr" ${state.basis === "lr" ? "selected" : ""}>Σ lowest repeatable per element</option></select></label>
+      </div>
+    </section>
+    <div class="stack" id="lineResult"></div>
+  </div>`;
+  document.querySelectorAll("[data-pick]").forEach(c => c.onchange = () => {
+    if (c.checked) state.ids.push(c.dataset.pick); else state.ids = state.ids.filter(x => x !== c.dataset.pick);
+    if (!state.takt) { const r = rows.find(x => x.id === c.dataset.pick); if (c.checked && r?.header.takt) { state.takt = r.header.takt; document.getElementById("takt").value = state.takt; } }
+    renderPicker(); draw();
+  });
+  document.getElementById("takt").oninput = e => { state.takt = e.target.value; draw(); };
+  document.getElementById("basis").onchange = e => { state.basis = e.target.value; draw(); };
+  renderPicker(); draw();
+}
+
+/* ------------------------------------------------------------ save & export */
+async function save() {
+  const btn = document.getElementById("save"); if (btn) btn.disabled = true;
+  try {
+    const body = {header: S.header, cycles: S.cycles, steps: S.steps, representative_cycle: S.representative_cycle};
+    const fresh = await (await api(`/api/studies/${S.id}`, jsonBody("PUT", body))).json();
+    Object.assign(S, fresh); dirty = false; renderBar(); toast("Changes saved");
+    return true;
+  } catch (e) { if (btn) btn.disabled = false; toast(`Not saved: ${e.message}`); return false; }
+}
+async function download(url, busy) {
+  if (dirty && !(await save())) return;
+  toast(`${busy}…`);
+  try {
+    const r = await api(url), blob = await r.blob();
+    const name = (r.headers.get("content-disposition") || "").match(/filename="?([^";]+)"?/)?.[1] || "export";
+    const a = Object.assign(document.createElement("a"), {href: URL.createObjectURL(blob), download: name});
+    document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+    toast(`Downloaded ${name}`);
+  } catch (e) { toast(`Export failed: ${e.message}`); }
+}
+
+/* ------------------------------------------------------------ accounts */
+let ME = null, authMode = "signin";
+function renderAuth(msg = "") {
+  clearTimeout(pollTimer);
+  document.querySelector(".shell").hidden = true;
+  document.getElementById("teachFab").hidden = true; closeTeach();
+  let w = document.getElementById("authView");
+  if (!w) { w = document.createElement("div"); w.id = "authView"; document.body.prepend(w); }
+  w.hidden = false;
+  const up = authMode === "signup";
+  w.innerHTML = `<div class="auth-wrap">
+    <section class="auth-side">
+      <div class="panel"><img src="/brand/mark.svg" alt="" style="width:54px">
+      <h1>Work Standardization <i>&amp;</i> Kaizen</h1>
+      <p>Record a station on a phone. Get the standardized work chart, time observation sheets and step breakdown, then teach it what to fix.</p>
+      <ul style="margin:0;padding-left:18px"><li>Your team's studies and station templates stay in your team's workspace</li><li>Invite colleagues with your team code</li></ul></div>
+    </section>
+    <section class="auth-main"><form class="auth-card" id="authForm" autocomplete="on"><img class="wm" src="/brand/wordmark.svg" alt="Process Annotation">
+      <div class="auth-tabs" role="tablist"><button type="button" data-am="signin" aria-selected="${!up}">Sign in</button>${CFG.signup_open !== false ? `<button type="button" data-am="signup" aria-selected="${up}">Create account</button>` : ""}</div>
+      ${msg ? `<div class="warnbox">${esc(msg)}</div>` : ""}
+      ${up ? `<label class="f">Your name<input type="text" id="auName" autocomplete="name" required></label>` : ""}
+      <label class="f">Work email<input type="email" id="auEmail" autocomplete="email" required></label>
+      <label class="f">Password${up ? " (8+ characters)" : ""}<input type="password" id="auPw" autocomplete="${up ? "new-password" : "current-password"}" required minlength="${up ? 8 : 1}"></label>
+      ${up ? `<div class="seg2"><label><input type="radio" name="auTeam" value="join" checked>Join my team</label><label><input type="radio" name="auTeam" value="new">Start a new team</label></div>
+        <label class="f" id="auJoin">Team invite code<input type="text" id="auCode" placeholder="e.g. JQ84-SWD3" autocomplete="off"></label>
+        <div id="auNew" hidden style="display:grid;gap:12px"><label class="f">Team name<input type="text" id="auTeamName" placeholder="e.g. Assembly Line 3"></label>
+          ${CFG.signup_code_required ? `<label class="f">Access code (from whoever shared the link)<input type="text" id="auAccess" autocomplete="off"></label>` : ""}</div>` : ""}
+      <button class="btn primary" type="submit" style="justify-content:center;padding:10px">${up ? "Create account" : "Sign in"}</button>
+    </form></section></div>`;
+  w.querySelectorAll("[data-am]").forEach(b => b.onclick = () => { authMode = b.dataset.am; renderAuth(); });
+  w.querySelectorAll("[name=auTeam]").forEach(r => r.onchange = () => {
+    const nw = w.querySelector("[name=auTeam]:checked").value === "new";
+    document.getElementById("auJoin").hidden = nw; document.getElementById("auNew").hidden = !nw;
+  });
+  document.getElementById("authForm").onsubmit = async ev => {
+    ev.preventDefault();
+    const g = id => document.getElementById(id)?.value || "";
+    const nw = up && w.querySelector("[name=auTeam]:checked")?.value === "new";
+    const body = up ? {name: g("auName"), email: g("auEmail"), password: g("auPw"), team_code: nw ? "" : g("auCode"), team_name: nw ? g("auTeamName") : "", access_code: g("auAccess")}
+                    : {email: g("auEmail"), password: g("auPw")};
+    try {
+      ME = await (await api(`/api/auth/${up ? "signup" : "login"}`, jsonBody("POST", body))).json();
+      w.hidden = true; document.querySelector(".shell").hidden = false;
+      renderAccount(); refreshSidebar(); route();
+    } catch (e) { renderAuth(e.message); }
+  };
+}
+function renderAccount() {
+  const el = document.getElementById("acct");
+  if (!ME || !ME.auth) { el.hidden = true; return; }
+  const t = ME.team || {};
+  el.hidden = false;
+  el.innerHTML = `<div><b>${esc(ME.name)}</b> · ${esc(t.name || "")}</div>
+    ${t.code ? `<div>Invite code <code>${esc(t.code)}</code> <button id="copyCode" title="Copy the invite code">copy</button></div>` : ""}
+    <div>${t.analyses_this_month ?? 0} of ${t.monthly_limit ?? "–"} video analyses this month</div>
+    <div><button id="signOut">Sign out</button></div>`;
+  const cc = document.getElementById("copyCode");
+  if (cc) cc.onclick = () => { navigator.clipboard?.writeText(`${location.origin}  ·  team invite code ${t.code}`); toast("Link and invite code copied"); };
+  document.getElementById("signOut").onclick = async () => { try { await api("/api/auth/logout", {method: "POST"}); } catch {} ME = null; S = null; renderAuth(); };
+}
+
+(async () => {
+  try { CFG = await (await api("/api/config")).json(); } catch {}
+  if (CFG.auth) {
+    const r = await fetch("/api/me");
+    if (r.status === 401) { renderAuth(); return; }
+    ME = await r.json(); renderAccount();
+  }
+  refreshSidebar(); route();
+})();
+</script>
+</body>
+</html>

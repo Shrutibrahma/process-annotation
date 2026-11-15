@@ -1,0 +1,254 @@
+{
+  "line": "Electronics bench",
+  "status": "draft",
+  "source": "video",
+  "elements": [
+    {
+      "id": "E1",
+      "name": "Connect ground wire to rail",
+      "breakpoint": "black wire enters frame",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E2",
+      "name": "Connect 5V power wire to rail",
+      "breakpoint": "red wire grasped",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E3",
+      "name": "Inspect power rails layout",
+      "breakpoint": "hand points to rail",
+      "location_id": "L1",
+      "category": "necessary_nva",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E4",
+      "name": "Separate jumper wires",
+      "breakpoint": "ribbon cable picked",
+      "location_id": "L2",
+      "category": "necessary_nva",
+      "hand": "both",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E5",
+      "name": "Inspect red LED polarity",
+      "breakpoint": "LED picked up",
+      "location_id": "L3",
+      "category": "necessary_nva",
+      "hand": "both",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E6",
+      "name": "Insert red LED into breadboard",
+      "breakpoint": "LED moves to board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E7",
+      "name": "Form resistor leads",
+      "breakpoint": "resistor picked up",
+      "location_id": "L4",
+      "category": "necessary_nva",
+      "hand": "both",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E8",
+      "name": "Insert resistor for red LED",
+      "breakpoint": "resistor approaches board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E9",
+      "name": "Pick red jumper wire",
+      "breakpoint": "hand reaches to wire",
+      "location_id": "L2",
+      "category": "necessary_nva",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E10",
+      "name": "Connect power to red LED",
+      "breakpoint": "wire reaches board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E11",
+      "name": "Pick and inspect yellow LED",
+      "breakpoint": "hand reaches to LEDs",
+      "location_id": "L3",
+      "category": "necessary_nva",
+      "hand": "both",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E12",
+      "name": "Insert yellow LED into breadboard",
+      "breakpoint": "LED touches board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E13",
+      "name": "Pick jumper wire for yellow LED",
+      "breakpoint": "hand reaches to wires",
+      "location_id": "L2",
+      "category": "necessary_nva",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E14",
+      "name": "Connect power jumper for yellow LED",
+      "breakpoint": "wire reaches yellow LED row",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E15",
+      "name": "Insert resistor for yellow LED",
+      "breakpoint": "resistor approaches board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E16",
+      "name": "Insert resistor for green LED",
+      "breakpoint": "resistor moves to rail",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E17",
+      "name": "Insert green LED into breadboard",
+      "breakpoint": "green LED touches board",
+      "location_id": "L1",
+      "category": "value_add",
+      "hand": "R",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    },
+    {
+      "id": "E18",
+      "name": "Inspect complete LED circuit",
+      "breakpoint": "hands gesture over board",
+      "location_id": "L1",
+      "category": "necessary_nva",
+      "hand": "both",
+      "walk": false,
+      "breakpoint_visible": true,
+      "issue": ""
+    }
+  ],
+  "layout": [
+    {
+      "id": "L1",
+      "label": "Breadboard",
+      "type": "fixture",
+      "column": "center",
+      "row": "front",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L2",
+      "label": "Jumper wires",
+      "type": "bin",
+      "column": "center",
+      "row": "back",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L3",
+      "label": "LEDs",
+      "type": "bin",
+      "column": "left",
+      "row": "middle",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L4",
+      "label": "Resistors",
+      "type": "bin",
+      "column": "left",
+      "row": "back",
+      "shelf": null,
+      "order": 1
+    },
+    {
+      "id": "L5",
+      "label": "Arduino board",
+      "type": "equipment",
+      "column": "right",
+      "row": "middle",
+      "shelf": null,
+      "order": 1
+    }
+  ],
+  "key": "electronics-bench",
+  "updated_at": 1794734616.992815
+}
