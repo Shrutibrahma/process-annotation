@@ -711,10 +711,8 @@ html.hc .muted{color:#1a1a1a}
     <h3>Lessons</h3>
     <div class="recent" id="recent"><span class="muted" style="padding:8px 14px;font-size:.85rem">Loading…</span></div>
     <div class="a11y" role="group" aria-label="Display">
-      <button type="button" class="a11y-btn" id="bigText" aria-pressed="false"><span aria-hidden="true" class="aa">A<span>A</span></span>Larger text</button>
       <button type="button" class="a11y-btn" id="hiCon" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor"/></svg>High contrast</button>
     </div>
-    <div class="foot" id="sideFoot">No sound needed: every step is shown, looped and written out. Ask before filming people at work; videos are read by a cloud AI model.</div>
     <div class="acct" id="acct" hidden></div>
   </aside>
   <div class="main">
@@ -826,7 +824,8 @@ function md(src) {
 let pollTimer = null, sideTimer = null, S = null, dirty = false, vid = null, editing = false, curTab = "instructions";
 let curCycle = 1, curStepId = null, CFG = {sheet_decimals: 0};
 const side = document.getElementById("side");
-for (const [id, cls, key] of [["bigText", "big", "ap.big"], ["hiCon", "hc", "ap.hc"]]) {
+document.documentElement.classList.remove("big");
+for (const [id, cls, key] of [["hiCon", "hc", "ap.hc"]]) {
   const b = document.getElementById(id), on0 = store.get(key, false);
   document.documentElement.classList.toggle(cls, on0); b.setAttribute("aria-pressed", on0);
   b.onclick = () => { const on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on); document.documentElement.classList.toggle(cls, on); store.set(key, on); };
