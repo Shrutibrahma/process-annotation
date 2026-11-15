@@ -649,6 +649,35 @@ kbd{font:600 .8rem/1 var(--font);border:1px solid var(--line);border-bottom-widt
 input.guess,select.guess{border-style:dashed;border-color:#8a9bb0}
 .btn.primary:disabled,.btn.primary:disabled:hover{background:#dfe5ec!important;border-color:#dfe5ec!important;color:#5b6573!important}
 
+/* learn view: one column, the video carries the weight */
+.learn{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.learn .center{gap:10px}
+.learn-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.learn-head h2{margin:2px 0 0;font-size:1.7rem}
+.learn-head .cycle-pick{padding:0;min-width:220px}
+.learn .player{flex:none;border-radius:16px}
+.learn .vwrap{flex:none;height:min(62vh,620px)}
+.strip{list-style:none;margin:4px 0 0;padding:4px 2px 6px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+.strip li{flex:none}
+.strip .step{width:44px;height:44px;padding:0;display:grid;place-items:center;border-radius:12px;border:1.5px solid var(--line);background:#fff;
+  font-weight:700;font-size:1rem;color:var(--ink-2);cursor:pointer;box-shadow:none}
+.strip .step:hover{border-color:var(--primary)}
+.strip .step[aria-selected=true]{background:var(--primary)!important;border-color:var(--primary);color:#fff;box-shadow:none}
+.strip .unclear-step{border-style:dashed}
+.about{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px;align-items:start;background:none;border:0;padding:0}
+.about-main .explain{background:#fff;border:1px solid var(--line-2);border-radius:14px;padding:20px 22px;box-shadow:var(--shadow-sm)}
+.about-main .plain{font-size:1.25rem!important}
+.about-main .facts{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 20px;margin-top:6px}
+.about-main .facts span{flex-direction:column;justify-content:flex-start;gap:2px}
+.about-side{display:grid;gap:10px}
+.about-side .sec{background:#fff}
+.moments{grid-column:1/-1;background:#fff;border:1px solid var(--line-2);border-radius:14px;padding:4px 6px}
+.moments summary{cursor:pointer;font-weight:700;padding:10px 12px;list-style-position:inside}
+.moments .sec{background:none;border:0}
+.moments .sec-h{display:none}
+.about:has(.edit-block){display:flex;flex-direction:column}
+@media (max-width:860px){.about{grid-template-columns:1fr}.learn .vwrap{height:46vh}.learn-head h2{font-size:1.35rem}}
+
 /* suggest a fix */
 .teach-fab{background:var(--side)!important;color:#fff;border:0!important;box-shadow:var(--shadow)}
 .teach-fab svg{color:var(--accent)}
@@ -1044,15 +1073,13 @@ function renderBar() {
 /* ------------------------------------------------------------ tab: instructions */
 function renderInstructions() {
   document.getElementById("tabBody").innerHTML = `
-  <div class="layout">
-    <section class="pane" aria-label="Steps">
-      <div class="steps-head"><span>Steps</span><span class="muted" id="stepCount"></span></div>
-      <div class="cycle-pick" id="cyclePick"></div>
-      <ul class="steps" id="steps" role="listbox" aria-label="Steps"></ul>
-    </section>
+  <div class="learn">
     <section class="center">
-      <div class="step-no" id="stepNo"></div>
-      <h2 id="stepTitle" aria-live="polite"></h2>
+      <div class="learn-head">
+        <div><div class="step-no" id="stepNo"></div><h2 id="stepTitle" aria-live="polite"></h2></div>
+        <div class="cycle-pick" id="cyclePick"></div>
+        <span id="stepCount" hidden></span>
+      </div>
       <div class="player">
         <div class="vwrap">
           <video id="vid" src="/api/studies/${S.id}/video" preload="auto" muted playsinline aria-describedby="cap"></video>
@@ -1074,10 +1101,11 @@ function renderInstructions() {
           <input type="range" id="scrub" min="0" max="1000" value="0" aria-label="Position in the video">
         </div>
       </div>
+      <ol class="strip" id="steps" aria-label="Steps"></ol>
       <p class="keys muted">Keyboard: <kbd>Space</kbd> play or pause · <kbd>↓</kbd> next step · <kbd>↑</kbd> previous step · <kbd>←</kbd> <kbd>→</kbd> frame by frame</p>
       <div id="editTools"></div>
     </section>
-    <section class="pane right" id="right" aria-label="Details"></section>
+    <section class="about" id="right" aria-label="About this step"></section>
   </div>`;
   vid = document.getElementById("vid");
   const scrub = document.getElementById("scrub");
@@ -1128,14 +1156,11 @@ function renderCyclePick() {
   document.getElementById("cycleSel").onchange = e => { curCycle = +e.target.value; const f = cycleSteps()[0]; selectStep(f ? f.id : null); };
 }
 function renderSteps() {
-  const ul = document.getElementById("steps");
-  ul.innerHTML = cycleSteps().map((s, i) => `
-    <li class="step" role="option" data-id="${s.id}" aria-selected="${s.id === curStepId}">
-      <span class="n">${i + 1}</span><div class="st-title">${esc(s.title)}</div>
-      <div class="st-meta"><span>${f1(s.end - s.start)} s</span><span>${{L: "Left hand", R: "Right hand", both: "Both hands"}[s.hand] || ""}</span>${s.confidence === "low" ? '<span class="unclear">Unclear in video</span>' : ""}</div>
-    </li>`).join("");
-  ul.querySelectorAll(".step").forEach(li => li.onclick = () => selectStep(li.dataset.id, true, true));
-  const selEl = ul.querySelector('[aria-selected="true"]'); if (selEl) selEl.scrollIntoView({block: "nearest"});
+  const ol = document.getElementById("steps");
+  ol.innerHTML = cycleSteps().map((s, i) => `<li><button class="step${s.confidence === "low" ? " unclear-step" : ""}" data-id="${s.id}" aria-selected="${s.id === curStepId}" ${s.id === curStepId ? 'aria-current="step"' : ""}
+      title="${i + 1}. ${esc(s.title)}" aria-label="Step ${i + 1}: ${esc(s.title)}">${i + 1}</button></li>`).join("");
+  ol.querySelectorAll(".step").forEach(b => b.onclick = () => selectStep(b.dataset.id, true, true));
+  const selEl = ol.querySelector('[aria-selected="true"]'); if (selEl) selEl.scrollIntoView({block: "nearest", inline: "nearest"});
 }
 const SECTIONS = [["key_points", "Watch out for", "Nothing special"], ["materials", "Parts you need", "None"], ["tools", "Tools you need", "None"]];
 function renderRight() {
@@ -1168,15 +1193,20 @@ function renderRight() {
       ${s.confidence === "low" ? `<div class="warnbox" style="margin-top:8px">This step is hard to see in the video. Watch it slowly, or ask someone to show you.</div>` : ""}
     </div>`;
   }
-  html += transcriptSection(s);
+  const listHtml = [];
   for (const [key, title, emptyText] of SECTIONS) {
     const items = s ? s[key] : [];
+    if (!editing && !items.length) continue;
     const body = editing && s
       ? `<textarea id="l_${key}" aria-label="${title}, one per line" placeholder="One per line">${esc(items.join("\n"))}</textarea>`
       : items.length ? `<ul>${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="empty">${emptyText}</div>`;
-    html += `<div class="sec"><div class="sec-h">${title}</div><div class="sec-b">${body}</div></div>`;
+    listHtml.push(`<div class="sec"><div class="sec-h">${title}</div><div class="sec-b">${body}</div></div>`);
   }
+  html = editing ? html + transcriptSection(s) + listHtml.join("")
+    : `<div class="about-main">${html}</div>${listHtml.length ? `<div class="about-side">${listHtml.join("")}</div>` : ""}
+       <details class="moments"${store.get("ap.moments", false) ? " open" : ""}><summary>Moment by moment</summary>${transcriptSection(s)}</details>`;
   el.innerHTML = html;
+  const mo = el.querySelector(".moments"); if (mo) mo.ontoggle = () => store.set("ap.moments", mo.open);
   const trBtn = el.querySelector("#trBtn"); if (trBtn) trBtn.onclick = () => transcribeCycle(trBtn);
   el.querySelectorAll(".tr li").forEach(li => li.onclick = () => { vid.currentTime = +li.dataset.t; vid.play().catch(() => {}); });
   highlightLine();
